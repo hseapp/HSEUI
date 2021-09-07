@@ -341,7 +341,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     
     public func setRefreshing() {
         #if !targetEnvironment(macCatalyst)
-        contentView
+        contentView.beginRefreshing()
         #endif
     }
 
