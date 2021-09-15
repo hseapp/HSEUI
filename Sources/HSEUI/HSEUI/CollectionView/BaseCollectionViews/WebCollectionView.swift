@@ -6,7 +6,9 @@
 //
 
 import UIKit
+#if !os(watchOS)
 import WebKit
+#endif
 
 protocol WebViewDataSource: AnyObject {
     func link() -> String?
