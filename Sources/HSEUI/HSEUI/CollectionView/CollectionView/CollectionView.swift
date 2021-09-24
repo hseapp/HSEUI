@@ -123,6 +123,8 @@ public class CollectionView: UIView, CollectionViewProtocol {
 
     private var refresher: RefreshControl?
     
+    private var newViewModel: CollectionViewModelProtocol?
+    
     private var currentViewModel: CollectionViewModelProtocol? {
         didSet {
             currentSections = currentViewModel?.sections.map({ $0.copy() }) ?? []
@@ -176,9 +178,10 @@ public class CollectionView: UIView, CollectionViewProtocol {
 
     // MARK: - reload
     public func reload(with viewModel: CollectionViewModelProtocol? = nil, animated: Bool = false) {
+        self.newViewModel = viewModel ?? currentViewModel
         let reloadBlock = { [weak self] in
             guard let self = self else { return }
-            guard let newViewModel = viewModel ?? self.currentViewModel else { return }
+            guard let newViewModel = self.newViewModel else { return }
             self.contentView.bind(to: newViewModel)
             if animated && self.currentViewModel != nil && newViewModel is CollectionViewModel {
                 self.animateDiff(viewModel: newViewModel)
