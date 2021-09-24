@@ -83,6 +83,10 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     }
     
     override func layoutSubviews() {
+        if disableLayout {
+            disableLayout = false
+            return
+        }
         super.layoutSubviews()
         updateScrollEnabled()
     }
@@ -94,9 +98,12 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         super.addSubview(view)
     }
     
+    
+    private var disableLayout = false
     private func updateScrollEnabled() {
         let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
         let newValue = round(delta) != 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
+        disableLayout = true
         if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
     }
     
