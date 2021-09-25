@@ -87,7 +87,10 @@ open class CellViewModel: CellViewModelProtocol {
         let configurator = CellViewConfigurator<T>.builder()
             .setUseChevron(useChevron ?? (tapCallback != nil))
             .setConfigureView(configureView)
-            .setTapCallback(tapCallback)
+            .setTapCallback(tapCallback == nil ? nil : { [weak self] in
+                self?.markDirty()
+                tapCallback?()
+            })
             .setSelected(self._isSelected)
             .build()
         setUpReuse(with: configurator)
