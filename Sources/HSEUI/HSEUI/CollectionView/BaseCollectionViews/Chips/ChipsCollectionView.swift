@@ -115,15 +115,16 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
     // this code works fine when we already know our total height
     private func layout() {
         let totalWidth = frame.width
+        guard totalWidth > 0 else { return }
         var x: CGFloat = contentInset.left
         var y: CGFloat = contentInset.top
         var last: UIView?
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
-            if let cached = cache[currentCells[i].id] {
-                size = cached
-            } else {
+//            if let cached = cache[currentCells[i].id] {
+//                size = cached
+//            } else {
                 if let c = childConstraints[currentCells[i].id] {
                     c.constant = frame.width - contentInset.left - contentInset.right
                 } else {
@@ -133,8 +134,8 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
                 }
                 view.layoutIfNeeded()
                 size = view.frame.size
-                cache[currentCells[i].id] = size
-            }
+//                cache[currentCells[i].id] = size
+//            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left
                 y = (last?.frame.maxY ?? 0) + spacing
@@ -150,6 +151,7 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
     // this code is 100% correct if given correct width
     private func layoutHeight(for width: CGFloat) -> CGFloat {
         let totalWidth = width
+        guard totalWidth > 0 else { return 0 }
         var x: CGFloat = contentInset.left
         var y: CGFloat = contentInset.top
 
@@ -157,12 +159,20 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
-            if let cached = cache[currentCells[i].id] {
-                size = cached
-            } else {
-                size = view.systemLayoutSizeFitting(CGSize(width: width - contentInset.left - contentInset.right, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .init(1))
-                cache[currentCells[i].id] = size
-            }
+//            if let cached = cache[currentCells[i].id] {
+//                size = cached
+//            } else {
+                if let c = childConstraints[currentCells[i].id] {
+                    c.constant = totalWidth - contentInset.left - contentInset.right
+                } else {
+                    let c = view.widthAnchor.constraint(lessThanOrEqualToConstant: totalWidth - contentInset.left - contentInset.right)
+                    c.isActive = true
+                    childConstraints[currentCells[i].id] = c
+                }
+                view.layoutIfNeeded()
+                size = view.frame.size
+//                cache[currentCells[i].id] = size
+//            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left + size.width + spacing
                 y += size.height + spacing

@@ -16,12 +16,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.addSubview(collectionView)
-        collectionView.stickToSuperviewEdges([.left, .right, .top], insets: UIEdgeInsets(top: 90, left: 12, bottom: 0, right: 12))
+        collectionView.stickToSuperviewEdges([.left, .right, .top], insets: UIEdgeInsets(top: 90, left: 0, bottom: 0, right: 0))
         collectionView.backgroundColor = .red
         collectionView.reload(with: CollectionViewModel(cells: [
             FilterViewModel(text: "TEST", value: 0),
             FilterViewModel(text: "TEXT", value: 0),
-            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
+//            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
             FilterViewModel(text: "LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG", value: 0),
             FilterViewModel(text: "TEST", value: 0),
             FilterViewModel(text: "TEST", value: 0),

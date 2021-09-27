@@ -7,6 +7,15 @@
 
 import UIKit
 
+private extension Bundle {
+    
+    static var module: Bundle {
+        class T {}
+        return Bundle(for: T.self)
+    }
+    
+}
+
 public class Color {
 
     public class Base {
