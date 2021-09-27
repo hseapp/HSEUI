@@ -88,8 +88,8 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     }
     
     override func layoutSubviews() {
-        if disableLayout { disableLayout = false; return }
         super.layoutSubviews()
+        if disableLayout { disableLayout = false; return }
         updateScrollEnabled()
     }
     
