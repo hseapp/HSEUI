@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "HSEUI",
+        "repositoryURL": "/Users/matveykavtorov/Desktop/HSEUI",
+        "state": {
+          "branch": "master",
+          "revision": "398e608f2f8b723afe3b206f34a526146c577c15",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

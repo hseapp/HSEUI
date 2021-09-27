@@ -54,7 +54,6 @@
 		746E236325FB5791008094BF /* SelectionStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746E236225FB5791008094BF /* SelectionStyle.swift */; };
 		7476661126A1955A00CD1300 /* UIView+SafeBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7476661026A1955A00CD1300 /* UIView+SafeBounds.swift */; };
 		7487BEBA2572330100CCCA35 /* SFSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7487BEB92572330100CCCA35 /* SFSymbol.swift */; };
-		7487BF482572677100CCCA35 /* HSEUIWatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 7487BF462572677100CCCA35 /* HSEUIWatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7487BF4E2572677D00CCCA35 /* Nonce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60D925718E1900EB2740 /* Nonce.swift */; };
 		7487BF4F2572678100CCCA35 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60DB25718E1900EB2740 /* Queue.swift */; };
 		7487BF502572678500CCCA35 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60DE25718E1900EB2740 /* Action.swift */; };
@@ -113,8 +112,6 @@
 		7476661026A1955A00CD1300 /* UIView+SafeBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+SafeBounds.swift"; sourceTree = "<group>"; };
 		7487BEB92572330100CCCA35 /* SFSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbol.swift; sourceTree = "<group>"; };
 		7487BF442572677100CCCA35 /* HSEUIWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HSEUIWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7487BF462572677100CCCA35 /* HSEUIWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSEUIWatch.h; sourceTree = "<group>"; };
-		7487BF472572677100CCCA35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7494B5F22689E9DA00D737E8 /* UIImage+Cropping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIImage+Cropping.swift"; path = "../../../HSEUIComponents/HSEUIComponents/Helpers/UIImage+Cropping.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -184,7 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				745C60C225718DF000EB2740 /* HSEUI */,
-				7487BF452572677100CCCA35 /* HSEUIWatch */,
 				745C60C125718DF000EB2740 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -310,15 +306,6 @@
 			path = CollectionViewModel;
 			sourceTree = "<group>";
 		};
-		7487BF452572677100CCCA35 /* HSEUIWatch */ = {
-			isa = PBXGroup;
-			children = (
-				7487BF462572677100CCCA35 /* HSEUIWatch.h */,
-				7487BF472572677100CCCA35 /* Info.plist */,
-			);
-			path = HSEUIWatch;
-			sourceTree = "<group>";
-		};
 		74D2F70225FA48080078C30E /* BaseCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,7 +341,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7487BF482572677100CCCA35 /* HSEUIWatch.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
