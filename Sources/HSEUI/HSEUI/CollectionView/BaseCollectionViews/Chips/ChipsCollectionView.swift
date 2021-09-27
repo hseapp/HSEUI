@@ -160,6 +160,13 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
             if let cached = cache[currentCells[i].id] {
                 size = cached
             } else {
+                if let c = childConstraints[currentCells[i].id] {
+                    c.constant = frame.width - contentInset.left - contentInset.right
+                } else {
+                    let c = view.widthAnchor.constraint(lessThanOrEqualToConstant: frame.width - contentInset.left - contentInset.right)
+                    c.isActive = true
+                    childConstraints[currentCells[i].id] = c
+                }
                 view.layoutIfNeeded()
                 size = view.frame.size
                 cache[currentCells[i].id] = size
