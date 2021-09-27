@@ -22,10 +22,15 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         }
     }
     
-    override var contentOffset: CGPoint {
-        didSet {
+//    override var contentOffset: CGPoint {
+//        didSet {
 //            if contentOffset != oldValue { updateScrollEnabled() }
-        }
+//        }
+//    }
+    
+    override func safeAreaInsetsDidChange() {
+        heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
+        super.safeAreaInsetsDidChange()
     }
     
     private var contentSizeChanged: (() -> ())?
@@ -83,10 +88,7 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     }
     
     override func layoutSubviews() {
-        if disableLayout {
-            disableLayout = false
-            return
-        }
+        if disableLayout { disableLayout = false; return }
         super.layoutSubviews()
         updateScrollEnabled()
     }
@@ -98,7 +100,6 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         super.addSubview(view)
     }
     
-    
     private var disableLayout = false
     private func updateScrollEnabled() {
         let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
@@ -107,37 +108,37 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        updateScrollEnabled()
-        super.touchesBegan(touches, with: event)
-    }
-    
-    override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
-        return super.touchesShouldBegin(touches, with: event, in: view)
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let tr = touch.location(in: self).y - touch.previousLocation(in: self).y
-            if tr > 0 && self.contentOffset.y <= initialContentOffset.y && refresher == nil {
-                self.contentOffset.y = initialContentOffset.y
-                isScrollEnabled = false
-            } else {
-                updateScrollEnabled()
-            }
-        }
-        super.touchesMoved(touches, with: event)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        updateScrollEnabled()
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        updateScrollEnabled()
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        updateScrollEnabled()
+//        super.touchesBegan(touches, with: event)
+//    }
+//
+//    override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
+//        return super.touchesShouldBegin(touches, with: event, in: view)
+//    }
+//
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        for touch in touches {
+//            let tr = touch.location(in: self).y - touch.previousLocation(in: self).y
+//            if tr > 0 && self.contentOffset.y <= initialContentOffset.y && refresher == nil {
+//                self.contentOffset.y = initialContentOffset.y
+//                isScrollEnabled = false
+//            } else {
+//                updateScrollEnabled()
+//            }
+//        }
+//        super.touchesMoved(touches, with: event)
+//    }
+//
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesEnded(touches, with: event)
+//        updateScrollEnabled()
+//    }
+//
+//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesCancelled(touches, with: event)
+//        updateScrollEnabled()
+//    }
     
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
         insertRows(at: indexPaths, with: animation)
