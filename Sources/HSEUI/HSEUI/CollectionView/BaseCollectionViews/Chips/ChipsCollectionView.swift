@@ -160,7 +160,7 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
             if let cached = cache[currentCells[i].id] {
                 size = cached
             } else {
-                size = view.systemLayoutSizeFitting(CGSize(width: width - contentInset.left - contentInset.right, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .init(0))
+                size = view.systemLayoutSizeFitting(CGSize(width: width - contentInset.left - contentInset.right, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .init(1))
                 cache[currentCells[i].id] = size
             }
             if x + size.width + contentInset.right > totalWidth {
