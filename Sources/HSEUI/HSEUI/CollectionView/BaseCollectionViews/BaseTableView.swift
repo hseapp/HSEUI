@@ -22,15 +22,10 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         }
     }
     
-//    override var contentOffset: CGPoint {
-//        didSet {
-//            if contentOffset != oldValue { updateScrollEnabled() }
-//        }
-//    }
-    
-    override func safeAreaInsetsDidChange() {
+    override func adjustedContentInsetDidChange() {
+        super.adjustedContentInsetDidChange()
+        print(adjustedContentInset.bottom)
         heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
-        super.safeAreaInsetsDidChange()
     }
     
     private var contentSizeChanged: (() -> ())?
@@ -57,6 +52,7 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         heightConstraint = heightAnchor.constraint(equalToConstant: heightConstant)
         heightConstraint?.priority = UILayoutPriority(925)
         heightConstraint?.isActive = false
+        contentInsetAdjustmentBehavior = .always
     }
 
     required init?(coder: NSCoder) {

@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35CFADA827062FBE0030BF9A /* HSBottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 35CFADA727062FBE0030BF9A /* HSBottomSheet */; };
+		35CFADAA270630040030BF9A /* OptionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFADA9270630040030BF9A /* OptionPickerViewController.swift */; };
+		35CFADAE270631D50030BF9A /* BS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFADAD270631D50030BF9A /* BS.swift */; };
 		35DF354427020DD5008ABFA3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354327020DD5008ABFA3 /* AppDelegate.swift */; };
 		35DF354627020DD5008ABFA3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354527020DD5008ABFA3 /* SceneDelegate.swift */; };
 		35DF354827020DD5008ABFA3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354727020DD5008ABFA3 /* ViewController.swift */; };
@@ -32,6 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		35CFADA9270630040030BF9A /* OptionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPickerViewController.swift; sourceTree = "<group>"; };
+		35CFADAD270631D50030BF9A /* BS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BS.swift; sourceTree = "<group>"; };
 		35DF354027020DD5008ABFA3 /* HSEUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HSEUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35DF354327020DD5008ABFA3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35DF354527020DD5008ABFA3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35CFADA827062FBE0030BF9A /* HSBottomSheet in Frameworks */,
 				35DF355E27020E1E008ABFA3 /* HSEUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,6 +84,8 @@
 				35DF354327020DD5008ABFA3 /* AppDelegate.swift */,
 				35DF354527020DD5008ABFA3 /* SceneDelegate.swift */,
 				35DF354727020DD5008ABFA3 /* ViewController.swift */,
+				35CFADA9270630040030BF9A /* OptionPickerViewController.swift */,
+				35CFADAD270631D50030BF9A /* BS.swift */,
 				35DF354927020DD5008ABFA3 /* Main.storyboard */,
 				35DF354C27020DD5008ABFA3 /* Assets.xcassets */,
 				35DF354E27020DD5008ABFA3 /* LaunchScreen.storyboard */,
@@ -111,6 +119,9 @@
 			dependencies = (
 			);
 			name = HSEUIExample;
+			packageProductDependencies = (
+				35CFADA727062FBE0030BF9A /* HSBottomSheet */,
+			);
 			productName = HSEUIExample;
 			productReference = 35DF354027020DD5008ABFA3 /* HSEUIExample.app */;
 			productType = "com.apple.product-type.application";
@@ -138,6 +149,9 @@
 				Base,
 			);
 			mainGroup = 35DF353727020DD4008ABFA3;
+			packageReferences = (
+				35CFADA627062FBE0030BF9A /* XCRemoteSwiftPackageReference "HSBottomSheet" */,
+			);
 			productRefGroup = 35DF354127020DD5008ABFA3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -167,6 +181,8 @@
 			files = (
 				35DF354827020DD5008ABFA3 /* ViewController.swift in Sources */,
 				35DF354427020DD5008ABFA3 /* AppDelegate.swift in Sources */,
+				35CFADAA270630040030BF9A /* OptionPickerViewController.swift in Sources */,
+				35CFADAE270631D50030BF9A /* BS.swift in Sources */,
 				35DF354627020DD5008ABFA3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,6 +385,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		35CFADA627062FBE0030BF9A /* XCRemoteSwiftPackageReference "HSBottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:hseapp/HSBottomSheet.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		35CFADA727062FBE0030BF9A /* HSBottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35CFADA627062FBE0030BF9A /* XCRemoteSwiftPackageReference "HSBottomSheet" */;
+			productName = HSBottomSheet;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35DF353827020DD4008ABFA3 /* Project object */;
 }

@@ -24,8 +24,14 @@ class ViewController: UIViewController {
 //            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
             FilterViewModel(text: "LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG", value: 0),
             FilterViewModel(text: "TEST", value: 0),
-            FilterViewModel(text: "TEST", value: 0),
+            FilterViewModel(text: "TEST", value: 0, didValueChange: { [weak self] in
+                self?.test()
+            }),
         ]))
+    }
+    
+    private func test() {
+        self.showControllerAsBottomsheet(OptionPickerViewController())
     }
 
 
