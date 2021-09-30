@@ -24,7 +24,6 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
     override func adjustedContentInsetDidChange() {
         super.adjustedContentInsetDidChange()
-        print(adjustedContentInset.bottom)
         heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
     }
     

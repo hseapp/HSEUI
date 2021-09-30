@@ -118,7 +118,7 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
         guard totalWidth > 0 else { return }
         var x: CGFloat = contentInset.left
         var y: CGFloat = contentInset.top
-        var last: UIView?
+        var maxHeightInRow: CGFloat = 0
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
@@ -138,13 +138,14 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
 //            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left
-                y = (last?.frame.maxY ?? 0) + spacing
+                y += maxHeightInRow + spacing
+                maxHeightInRow = 0
                 view.frame.origin = CGPoint(x: x, y: y)
             } else {
                 view.frame.origin = CGPoint(x: x, y: y)
             }
+            maxHeightInRow = max(maxHeightInRow, size.height)
             x = view.frame.maxX + spacing
-            last = view
         }
     }
 
@@ -156,6 +157,7 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
         var y: CGFloat = contentInset.top
 
         var result: CGFloat = 0
+        var maxHeightInRow: CGFloat = 0
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
@@ -175,10 +177,12 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
 //            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left + size.width + spacing
-                y += size.height + spacing
+                y += maxHeightInRow + spacing
+                maxHeightInRow = 0
             } else {
                 x += size.width + spacing
             }
+            maxHeightInRow = max(maxHeightInRow, size.height)
             result = max(result, y + size.height + contentInset.bottom)
         }
         return result

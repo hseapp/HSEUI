@@ -23,17 +23,29 @@ class ViewController: UIViewController {
             FilterViewModel(text: "TEXT", value: 0),
 //            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
             FilterViewModel(text: "LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG", value: 0),
-            FilterViewModel(text: "TEST", value: 0),
-            FilterViewModel(text: "TEST", value: 0, didValueChange: { [weak self] in
-                self?.test()
+            FilterViewModel(text: "Text input", value: 0, didValueChange: { [weak self] in
+                self?.present(TIViewController(), animated: true, completion: nil)
+            }),
+            FilterViewModel(text: "Text input BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(TIViewController())
+            }),
+            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(OptionPickerViewController())
+            }),
+            
+            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(OptionPickerViewController())
+            }),
+            
+            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(OptionPickerViewController())
+            }),
+            
+            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(OptionPickerViewController())
             }),
         ]))
     }
-    
-    private func test() {
-        self.showControllerAsBottomsheet(OptionPickerViewController())
-    }
-
 
 }
 
