@@ -20,8 +20,7 @@ class ViewController: UIViewController {
         collectionView.backgroundColor = .red
         collectionView.reload(with: CollectionViewModel(cells: [
             FilterViewModel(text: "TEST", value: 0),
-            FilterViewModel(text: "TEXT", value: 0),
-//            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
+            FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
             FilterViewModel(text: "LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG", value: 0),
             FilterViewModel(text: "Text input", value: 0, didValueChange: { [weak self] in
                 self?.present(TIViewController(), animated: true, completion: nil)
@@ -33,16 +32,8 @@ class ViewController: UIViewController {
                 self?.showControllerAsBottomsheet(OptionPickerViewController())
             }),
             
-            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
-                self?.showControllerAsBottomsheet(OptionPickerViewController())
-            }),
-            
-            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
-                self?.showControllerAsBottomsheet(OptionPickerViewController())
-            }),
-            
-            FilterViewModel(text: "small BS", value: 0, didValueChange: { [weak self] in
-                self?.showControllerAsBottomsheet(OptionPickerViewController())
+            FilterViewModel(text: "table with headers", value: 0, didValueChange: { [weak self] in
+                self?.present(BigTableViewController(), animated: true, completion: nil)
             }),
         ]))
     }

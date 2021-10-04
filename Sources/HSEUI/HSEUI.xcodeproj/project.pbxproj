@@ -62,8 +62,8 @@
 		35846B7226035E1F0076899C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		3591DC602698CEA60059C477 /* PagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewModel.swift; sourceTree = "<group>"; };
 		3591DC7A26A891B60059C477 /* UIBlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlurEffect.swift; sourceTree = "<group>"; };
+		35CFADB7270B4F4D0030BF9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35DF352427020C79008ABFA3 /* HSEUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSEUI.h; sourceTree = "<group>"; };
-		35DF352527020C79008ABFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		740232C325F5290E0046FCB5 /* PagerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		7419635C268E22E5005FAF22 /* UIView+WidthCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+WidthCatcher.swift"; sourceTree = "<group>"; };
 		74327B2825F81963001C1BA7 /* CellViewConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellViewConfigurator.swift; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 				745C60D725718E1900EB2740 /* Helpers */,
 				745C60EE25718E1900EB2740 /* Config */,
 				35DF352427020C79008ABFA3 /* HSEUI.h */,
-				35DF352527020C79008ABFA3 /* Info.plist */,
+				35CFADB7270B4F4D0030BF9A /* Info.plist */,
 			);
 			path = HSEUI;
 			sourceTree = "<group>";

@@ -55,8 +55,12 @@ extension UIViewController {
 //           let scroll = collection.findChildren(UIScrollView.self).first {
 //            bs.childScrollView = scroll
 //        }
-        
-        let vc = sender ?? UIApplication.shared.keyWindow?.rootViewController?.topController(excludeBottomSheet: false)
+        let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        let vc = sender ?? keyWindow?.rootViewController?.topController(excludeBottomSheet: false)
         vc?.present(bs, animated: true, completion: nil)
 //        bottomSheetStack.push(bs)
     }
@@ -71,6 +75,45 @@ extension UIViewController {
         } else {
             return self
         }
+    }
+    
+    func addCustomNavigationBarIfNeeded(isLineHidden: Bool = false) {
+        guard navigationItem.title?.isEmpty == false || navigationItem.leftBarButtonItems != nil || navigationItem.rightBarButtonItems != nil || navigationItem.searchController != nil else { return }
+        guard navigationController == nil else { return }
+        guard !(self is UINavigationController) else { return }
+        guard view.subviews.filter({ $0 is UINavigationBar }).isEmpty else { return }
+        
+        var barHeight: CGFloat = 50
+        
+        let bar = UINavigationBar()
+        let line = UIView()
+        if isLineHidden {
+            line.isHidden = true
+        }
+        line.backgroundColor = Color.Base.separator
+        Self.setupNavBar(bar, line: line)
+        bar.items = [navigationItem]
+        view.addSubview(bar)
+        bar.stickToSuperviewEdges([.top, .left, .right])
+        
+        if navigationItem.searchController != nil {
+            barHeight += 50
+        }
+        additionalSafeAreaInsets.top = barHeight
+    }
+    
+    static func setupNavBar(_ navigationBar: UINavigationBar, line: UIView) {
+        navigationBar.standardAppearance.configureWithTransparentBackground()
+        navigationBar.compactAppearance?.configureWithTransparentBackground()
+        navigationBar.scrollEdgeAppearance?.configureWithTransparentBackground()
+        
+        navigationBar.barTintColor = Color.Base.mainBackground
+        navigationBar.tintColor = Color.Base.brandTint
+        navigationBar.titleTextAttributes = [.font: Font.main(weight: .semibold).withSize(17)]
+        
+        navigationBar.addSubview(line)
+        line.stickToSuperviewEdges([.left, .bottom, .right])
+        line.height(0.5)
     }
     
 }
@@ -144,45 +187,6 @@ fileprivate final class BottomSheetOffsetViewController: UIViewController {
     
     @objc private func close() {
 //        Navigator.main.closeSheet()
-    }
-    
-    func addCustomNavigationBarIfNeeded(isLineHidden: Bool = false) {
-        guard navigationItem.title?.isEmpty == false || navigationItem.leftBarButtonItems != nil || navigationItem.rightBarButtonItems != nil || navigationItem.searchController != nil else { return }
-        guard navigationController == nil else { return }
-        guard !(self is UINavigationController) else { return }
-        guard view.subviews.filter({ $0 is UINavigationBar }).isEmpty else { return }
-        
-        var barHeight: CGFloat = 50
-        
-        let bar = UINavigationBar()
-        let line = UIView()
-        if isLineHidden {
-            line.isHidden = true
-        }
-        line.backgroundColor = Color.Base.separator
-        Self.setupNavBar(bar, line: line)
-        bar.items = [navigationItem]
-        view.addSubview(bar)
-        bar.stickToSuperviewEdges([.top, .left, .right])
-        
-        if navigationItem.searchController != nil {
-            barHeight += 50
-        }
-        additionalSafeAreaInsets.top = barHeight
-    }
-    
-    static func setupNavBar(_ navigationBar: UINavigationBar, line: UIView) {
-        navigationBar.standardAppearance.configureWithTransparentBackground()
-        navigationBar.compactAppearance?.configureWithTransparentBackground()
-        navigationBar.scrollEdgeAppearance?.configureWithTransparentBackground()
-        
-        navigationBar.barTintColor = Color.Base.mainBackground
-        navigationBar.tintColor = Color.Base.brandTint
-        navigationBar.titleTextAttributes = [.font: Font.main(weight: .semibold).withSize(17)]
-        
-        navigationBar.addSubview(line)
-        line.stickToSuperviewEdges([.left, .bottom, .right])
-        line.height(0.5)
     }
     
 }
