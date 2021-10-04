@@ -52,9 +52,11 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         heightConstraint?.priority = UILayoutPriority(925)
         heightConstraint?.isActive = false
         contentInsetAdjustmentBehavior = .always
+        #if !targetEnvironment(macCatalyst)
         if #available(iOS 15.0, *) {
             self.sectionHeaderTopPadding = 0
         }
+        #endif
     }
 
     required init?(coder: NSCoder) {
