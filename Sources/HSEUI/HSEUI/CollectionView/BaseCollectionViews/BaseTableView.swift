@@ -156,8 +156,8 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         }
     }
 
-    func scrollTo(_ indexPath: IndexPath) {
-        scrollToRow(at: indexPath, at: .top, animated: true)
+    func scroll(to indexPath: IndexPath) {
+        scrollToRow(at: indexPath, at: .middle, animated: true)
     }
 
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {

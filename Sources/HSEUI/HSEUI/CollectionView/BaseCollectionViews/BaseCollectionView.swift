@@ -44,26 +44,15 @@ class BaseCollectionView: UICollectionView, BaseCollectionViewProtocol {
         listeners = []
         listeners.append(viewModel?.setCellVisible.listen { [weak self] (indexPath: IndexPath) in
             guard let self = self else { return }
-            guard let flow = self.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-            if flow.scrollDirection == .horizontal {
-                self.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            } else {
-                self.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
-            }
+            self.scroll(to: indexPath)
         })
         listeners.append(viewModel?.setCellVisible.listen { [weak self] in
             guard let self = self else { return }
-            guard let flow = self.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-            
             guard let cell = self.visibleCells.min(by: { (cell1, cell2) -> Bool in
                 return cell1.frame.origin.distance(to: self.contentOffset) < cell2.frame.origin.distance(to: self.contentOffset)
             }) else { return }
             guard let indexPath = self.indexPath(for: cell) else { return }
-            if flow.scrollDirection == .horizontal {
-                self.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            } else {
-                self.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
-            }
+            self.scroll(to: indexPath)
         })
         delegate = viewModel as? UICollectionViewDelegate
         contentSizeChanged = { [weak self] in
@@ -92,8 +81,14 @@ class BaseCollectionView: UICollectionView, BaseCollectionViewProtocol {
         scrollToItem(at: .init(row: 0, section: 0), at: .top, animated: true)
     }
 
-    func scrollTo(_ indexPath: IndexPath) {
-        scrollToItem(at: indexPath, at: .top, animated: true)
+    func scroll(to indexPath: IndexPath) {
+        guard let flow = self.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        if flow.scrollDirection == .horizontal {
+            self.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
+        else {
+            self.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
+        }
     }
     
     func setEditing(_ editing: Bool, animated: Bool) {
