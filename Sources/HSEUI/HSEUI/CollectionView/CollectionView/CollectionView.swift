@@ -360,10 +360,6 @@ public class CollectionView: UIView, CollectionViewProtocol {
         currentViewModel?.deselectAllCells()
     }
 
-    public func scrollRectToVisible(rect: CGRect) {
-        contentView.scrollRectToVisible(rect, animated: true)
-    }
-
     private var keyboardListeners: [EventListener] = []
     public func handleFirstResponder(for cell: CellViewModel) {
         keyboardListeners = []

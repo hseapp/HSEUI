@@ -15,7 +15,6 @@ protocol BaseCollectionViewProtocol: UIView {
     func deleteItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func scrollToTop()
     func setEditing(_ editing: Bool, animated: Bool)
-    func scrollRectToVisible(_ rect: CGRect, animated: Bool)
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func reloadSections(_ sections: [Int], with animation: UITableView.RowAnimation)
     func orientationWillChange(newSize: CGSize)
@@ -70,10 +69,6 @@ extension BaseCollectionViewProtocol {
     }
     
     func setEditing(_ editing: Bool, animated: Bool) {
-        assertionFailure("setEditing is not supported in chips")
-    }
-    
-    func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
         assertionFailure("setEditing is not supported in chips")
     }
     

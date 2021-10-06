@@ -35,6 +35,10 @@ class ViewController: UIViewController {
             FilterViewModel(text: "table with headers", value: 0, didValueChange: { [weak self] in
                 self?.present(BigTableViewController(), animated: true, completion: nil)
             }),
+            
+            FilterViewModel(text: "Selectable cells", value: 0, didValueChange: { [weak self] in
+                self?.present(SelectableCellsViewController(), animated: true, completion: nil)
+            }),
         ]))
     }
 
