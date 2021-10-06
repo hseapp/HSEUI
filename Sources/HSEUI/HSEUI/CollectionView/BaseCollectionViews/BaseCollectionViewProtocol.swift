@@ -14,6 +14,7 @@ protocol BaseCollectionViewProtocol: UIView {
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func deleteItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func scrollToTop()
+    func scrollTo(_ indexPath: IndexPath)
     func setEditing(_ editing: Bool, animated: Bool)
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func reloadSections(_ sections: [Int], with animation: UITableView.RowAnimation)
@@ -49,35 +50,39 @@ extension BaseCollectionViewProtocol {
     }
     
     func insertSections(_ sections: IndexSet, with animation: UITableView.RowAnimation) {
-        assertionFailure("insertSections is not supported here")
+        assertionFailure("insertSections is not implemented for \(String(describing: self))")
     }
     
     func deleteSections(_ sections: IndexSet, with animation: UITableView.RowAnimation) {
-        assertionFailure("deleteSections is not supported here")
+        assertionFailure("deleteSections is not implemented for \(String(describing: self))")
     }
     
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        assertionFailure("insertItems is not supported here")
+        assertionFailure("insertItems is not implemented for \(String(describing: self))")
     }
     
     func deleteItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        assertionFailure("deleteItems is not supported here")
+        assertionFailure("deleteItems is not implemented for \(String(describing: self))")
     }
     
     func scrollToTop() {
-        assertionFailure("scrollToTop is not supported in chips")
+        assertionFailure("scrollToTop is not implemented for \(String(describing: self))")
+    }
+
+    func scrollTo(_ indexPath: IndexPath) {
+        assertionFailure("scrollTo is not implemented for \(String(describing: self))")
     }
     
     func setEditing(_ editing: Bool, animated: Bool) {
-        assertionFailure("setEditing is not supported in chips")
+        assertionFailure("setEditing is not implemented for \(String(describing: self))")
     }
     
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        assertionFailure("This method is not supported")
+        assertionFailure("This method is not implemented for \(String(describing: self))")
     }
     
     func reloadSections(_ sections: [Int], with animation: UITableView.RowAnimation) {
-        assertionFailure("This method is not supported")
+        assertionFailure("This method is not implemented for \(String(describing: self))")
     }
     
     func bind(to viewModel: CollectionViewModelProtocol?) { }
@@ -85,7 +90,7 @@ extension BaseCollectionViewProtocol {
     func orientationWillChange(newSize: CGSize) { }
     
     func beginRefreshing() {
-        assertionFailure("This method is not supported here")
+        assertionFailure("This method is implemented for \(String(describing: self))")
     }
     
 }
