@@ -91,6 +91,10 @@ class BaseCollectionView: UICollectionView, BaseCollectionViewProtocol {
     func scrollToTop() {
         scrollToItem(at: .init(row: 0, section: 0), at: .top, animated: true)
     }
+
+    func scrollTo(_ indexPath: IndexPath) {
+        scrollToItem(at: indexPath, at: .top, animated: true)
+    }
     
     func setEditing(_ editing: Bool, animated: Bool) {
         // this method is not supported in collection view
