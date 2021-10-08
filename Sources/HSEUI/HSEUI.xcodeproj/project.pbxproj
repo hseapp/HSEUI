@@ -28,7 +28,6 @@
 		7442DDD625FA4D10008B5CD4 /* CellViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7442DDD525FA4D10008B5CD4 /* CellViewProtocol.swift */; };
 		7442DDDF25FA4D59008B5CD4 /* SectionViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7442DDDE25FA4D59008B5CD4 /* SectionViewModelProtocol.swift */; };
 		7452EB0425FB497D00BB1823 /* BaseCollectionViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7452EB0325FB497D00BB1823 /* BaseCollectionViewProtocol.swift */; };
-		745C60C525718DF000EB2740 /* HSEUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 745C60C325718DF000EB2740 /* HSEUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		745C610925718E1900EB2740 /* HSEUIEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60CC25718E1800EB2740 /* HSEUIEvents.swift */; };
 		745C610A25718E1900EB2740 /* EventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60CD25718E1800EB2740 /* EventDispatcher.swift */; };
 		745C611025718E1900EB2740 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60D625718E1800EB2740 /* RefreshControl.swift */; };
@@ -54,12 +53,6 @@
 		746E236325FB5791008094BF /* SelectionStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746E236225FB5791008094BF /* SelectionStyle.swift */; };
 		7476661126A1955A00CD1300 /* UIView+SafeBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7476661026A1955A00CD1300 /* UIView+SafeBounds.swift */; };
 		7487BEBA2572330100CCCA35 /* SFSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7487BEB92572330100CCCA35 /* SFSymbol.swift */; };
-		7487BF482572677100CCCA35 /* HSEUIWatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 7487BF462572677100CCCA35 /* HSEUIWatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7487BF4E2572677D00CCCA35 /* Nonce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60D925718E1900EB2740 /* Nonce.swift */; };
-		7487BF4F2572678100CCCA35 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60DB25718E1900EB2740 /* Queue.swift */; };
-		7487BF502572678500CCCA35 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60DE25718E1900EB2740 /* Action.swift */; };
-		7487BF53257267D900CCCA35 /* EventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745C60CD25718E1800EB2740 /* EventDispatcher.swift */; };
-		7494B5F32689E9DA00D737E8 /* UIImage+Cropping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7494B5F22689E9DA00D737E8 /* UIImage+Cropping.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +62,8 @@
 		35846B7226035E1F0076899C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		3591DC602698CEA60059C477 /* PagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewModel.swift; sourceTree = "<group>"; };
 		3591DC7A26A891B60059C477 /* UIBlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlurEffect.swift; sourceTree = "<group>"; };
+		35CFADB7270B4F4D0030BF9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35DF352427020C79008ABFA3 /* HSEUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSEUI.h; sourceTree = "<group>"; };
 		740232C325F5290E0046FCB5 /* PagerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		7419635C268E22E5005FAF22 /* UIView+WidthCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+WidthCatcher.swift"; sourceTree = "<group>"; };
 		74327B2825F81963001C1BA7 /* CellViewConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellViewConfigurator.swift; sourceTree = "<group>"; };
@@ -85,8 +80,6 @@
 		7442DDDE25FA4D59008B5CD4 /* SectionViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionViewModelProtocol.swift; sourceTree = "<group>"; };
 		7452EB0325FB497D00BB1823 /* BaseCollectionViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewProtocol.swift; sourceTree = "<group>"; };
 		745C60C025718DF000EB2740 /* HSEUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HSEUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		745C60C325718DF000EB2740 /* HSEUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSEUI.h; sourceTree = "<group>"; };
-		745C60C425718DF000EB2740 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		745C60CC25718E1800EB2740 /* HSEUIEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HSEUIEvents.swift; sourceTree = "<group>"; };
 		745C60CD25718E1800EB2740 /* EventDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDispatcher.swift; sourceTree = "<group>"; };
 		745C60D625718E1800EB2740 /* RefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
@@ -112,21 +105,10 @@
 		746E236225FB5791008094BF /* SelectionStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionStyle.swift; sourceTree = "<group>"; };
 		7476661026A1955A00CD1300 /* UIView+SafeBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+SafeBounds.swift"; sourceTree = "<group>"; };
 		7487BEB92572330100CCCA35 /* SFSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbol.swift; sourceTree = "<group>"; };
-		7487BF442572677100CCCA35 /* HSEUIWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HSEUIWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7487BF462572677100CCCA35 /* HSEUIWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HSEUIWatch.h; sourceTree = "<group>"; };
-		7487BF472572677100CCCA35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7494B5F22689E9DA00D737E8 /* UIImage+Cropping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIImage+Cropping.swift"; path = "../../../HSEUIComponents/HSEUIComponents/Helpers/UIImage+Cropping.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		745C60BD25718DF000EB2740 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7487BF412572677100CCCA35 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -184,7 +166,6 @@
 			isa = PBXGroup;
 			children = (
 				745C60C225718DF000EB2740 /* HSEUI */,
-				7487BF452572677100CCCA35 /* HSEUIWatch */,
 				745C60C125718DF000EB2740 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -193,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				745C60C025718DF000EB2740 /* HSEUI.framework */,
-				7487BF442572677100CCCA35 /* HSEUIWatch.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -205,8 +185,8 @@
 				745C60CB25718E1800EB2740 /* Events */,
 				745C60D725718E1900EB2740 /* Helpers */,
 				745C60EE25718E1900EB2740 /* Config */,
-				745C60C325718DF000EB2740 /* HSEUI.h */,
-				745C60C425718DF000EB2740 /* Info.plist */,
+				35DF352427020C79008ABFA3 /* HSEUI.h */,
+				35CFADB7270B4F4D0030BF9A /* Info.plist */,
 			);
 			path = HSEUI;
 			sourceTree = "<group>";
@@ -230,7 +210,6 @@
 				745C60DA25718E1900EB2740 /* UIView+Layout.swift */,
 				74327B2C25F81977001C1BA7 /* UITableView+Reuse.swift */,
 				745C60D825718E1900EB2740 /* UICollectionView+Reuse.swift */,
-				7494B5F22689E9DA00D737E8 /* UIImage+Cropping.swift */,
 				7419635C268E22E5005FAF22 /* UIView+WidthCatcher.swift */,
 				7433FF78268F3E0100DCC8A5 /* UIView+find.swift */,
 				7476661026A1955A00CD1300 /* UIView+SafeBounds.swift */,
@@ -310,15 +289,6 @@
 			path = CollectionViewModel;
 			sourceTree = "<group>";
 		};
-		7487BF452572677100CCCA35 /* HSEUIWatch */ = {
-			isa = PBXGroup;
-			children = (
-				7487BF462572677100CCCA35 /* HSEUIWatch.h */,
-				7487BF472572677100CCCA35 /* Info.plist */,
-			);
-			path = HSEUIWatch;
-			sourceTree = "<group>";
-		};
 		74D2F70225FA48080078C30E /* BaseCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -346,15 +316,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				745C60C525718DF000EB2740 /* HSEUI.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7487BF3F2572677100CCCA35 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7487BF482572677100CCCA35 /* HSEUIWatch.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,24 +340,6 @@
 			productReference = 745C60C025718DF000EB2740 /* HSEUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		7487BF432572677100CCCA35 /* HSEUIWatch */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7487BF4B2572677100CCCA35 /* Build configuration list for PBXNativeTarget "HSEUIWatch" */;
-			buildPhases = (
-				7487BF3F2572677100CCCA35 /* Headers */,
-				7487BF402572677100CCCA35 /* Sources */,
-				7487BF412572677100CCCA35 /* Frameworks */,
-				7487BF422572677100CCCA35 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = HSEUIWatch;
-			productName = HSEUIWatch;
-			productReference = 7487BF442572677100CCCA35 /* HSEUIWatch.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -406,9 +349,6 @@
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
 					745C60BF25718DF000EB2740 = {
-						CreatedOnToolsVersion = 12.2;
-					};
-					7487BF432572677100CCCA35 = {
 						CreatedOnToolsVersion = 12.2;
 					};
 				};
@@ -427,7 +367,6 @@
 			projectRoot = "";
 			targets = (
 				745C60BF25718DF000EB2740 /* HSEUI */,
-				7487BF432572677100CCCA35 /* HSEUIWatch */,
 			);
 		};
 /* End PBXProject section */
@@ -438,13 +377,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				745C612325718E1900EB2740 /* Colors.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7487BF422572677100CCCA35 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +396,6 @@
 				3591DC612698CEA60059C477 /* PagerViewModel.swift in Sources */,
 				74327B2925F81963001C1BA7 /* CellViewConfigurator.swift in Sources */,
 				745C612025718E1900EB2740 /* CollectionView.swift in Sources */,
-				7494B5F32689E9DA00D737E8 /* UIImage+Cropping.swift in Sources */,
 				74388DF52694F42F00136701 /* WebViewModel.swift in Sources */,
 				74388DF32694EB1700136701 /* WebCollectionView.swift in Sources */,
 				745C611025718E1900EB2740 /* RefreshControl.swift in Sources */,
@@ -501,17 +432,6 @@
 				35846B6D260357BD0076899C /* HSEUISettings.swift in Sources */,
 				745C611725718E1900EB2740 /* Action.swift in Sources */,
 				745C611225718E1900EB2740 /* Nonce.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7487BF402572677100CCCA35 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7487BF4E2572677D00CCCA35 /* Nonce.swift in Sources */,
-				7487BF53257267D900CCCA35 /* EventDispatcher.swift in Sources */,
-				7487BF502572678500CCCA35 /* Action.swift in Sources */,
-				7487BF4F2572678100CCCA35 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,64 +619,6 @@
 			};
 			name = Release;
 		};
-		7487BF492572677100CCCA35 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6QTSV772M5;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HSEUIWatch/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.hse.HSEUIWatch;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
-			};
-			name = Debug;
-		};
-		7487BF4A2572677100CCCA35 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6QTSV772M5;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HSEUIWatch/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.hse.HSEUIWatch;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -774,15 +636,6 @@
 			buildConfigurations = (
 				745C60C925718DF000EB2740 /* Debug */,
 				745C60CA25718DF000EB2740 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7487BF4B2572677100CCCA35 /* Build configuration list for PBXNativeTarget "HSEUIWatch" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7487BF492572677100CCCA35 /* Debug */,
-				7487BF4A2572677100CCCA35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

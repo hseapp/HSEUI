@@ -11,6 +11,7 @@ public protocol CollectionViewProtocol: UIView {
     var additionalSafeAreaInsets: UIEdgeInsets { set get }
     
     func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool)
+    func scroll(to cell: CellViewModel)
     func setUpRefresher(refreshCallback: Action?)
     func setEditing(_ value: Bool)
     func orientationWillChange(newSize: CGSize)
@@ -162,6 +163,8 @@ public class CollectionView: UIView, CollectionViewProtocol {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         contentView.addGestureRecognizer(tap)
+        
+        _ = KeyboardObserver.main
     }
     
     required init?(coder: NSCoder) {
@@ -318,12 +321,6 @@ public class CollectionView: UIView, CollectionViewProtocol {
             section.footer?.configure(for: self)
             section.header?.configure(for: self)
         }
-        let oldBounds = self.bounds
-        mainQueue(delay: 0.1) {
-            if oldBounds == self.bounds {
-                self.reload()
-            }
-        }
     }
 
     // MARK: - refresh
@@ -356,6 +353,15 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.scrollToTop()
     }
 
+    public func scroll(to cell: CellViewModel) {
+        guard let indexPath = indexPath(for: cell) else {
+            assertionFailure("There is no such cell")
+            return
+        }
+
+        contentView.scroll(to: indexPath)
+    }
+
     public func setEditing(_ value: Bool) {
         contentView.setEditing(value, animated: true)
     }
@@ -369,12 +375,13 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
 
     private var keyboardListeners: [EventListener] = []
-    public func handleFirstResponder(in rect: CGRect) {
+    public func handleFirstResponder(for cell: CellViewModel) {
         keyboardListeners = []
         keyboardListeners.append(KeyboardEvent.keyboardDidShow.listen { [weak self] (height: CGFloat) in
             guard let self = self else { return }
             self.contentView.contentInset.bottom = height
-            self.scrollRectToVisible(rect: rect)
+            guard let indexPath = self.indexPath(for: cell) else { return }
+            self.currentViewModel?.setCellVisible.raise(data: indexPath)
         })
         keyboardListeners.append(KeyboardEvent.keyboardWillHide.listen { [weak self] in
             UIView.animate(withDuration: 0.3) {
@@ -382,6 +389,16 @@ public class CollectionView: UIView, CollectionViewProtocol {
             }
             self?.keyboardListeners = []
         })
+    }
+    
+    private func indexPath(for cell: CellViewModel) -> IndexPath? {
+        guard let vm = currentViewModel else { return nil }
+        for i in 0..<vm.sections.count {
+            for j in 0..<vm.sections[i].cells.count {
+                if vm.sections[i].cells[j].id == cell.id { return IndexPath(row: j, section: i) }
+            }
+        }
+        return nil
     }
     
     open func orientationWillChange(newSize: CGSize) {
@@ -478,6 +495,42 @@ extension CollectionView {
             if lhs.updateView(view: view) == false { return false }
         }
         return true
+    }
+    
+}
+
+fileprivate class KeyboardObserver: NSObject {
+    
+    static let main = KeyboardObserver()
+    
+    override init() {
+        super.init()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    deinit {
+         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleKeyboard(notification: NSNotification) {
+        switch notification.name {
+        case UIResponder.keyboardWillShowNotification:
+            KeyboardEvent.keyboardWillShow.raise()
+        case UIResponder.keyboardDidShowNotification:
+            if let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect {
+                KeyboardEvent.keyboardDidShow.raise(data: keyboardSize.height)
+            }
+        case UIResponder.keyboardWillHideNotification:
+            KeyboardEvent.keyboardWillHide.raise()
+        case UIResponder.keyboardDidHideNotification:
+            KeyboardEvent.keyboardDidHide.raise()
+        default:
+            break
+        }
     }
     
 }

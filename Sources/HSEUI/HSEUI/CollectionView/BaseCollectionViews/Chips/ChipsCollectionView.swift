@@ -115,15 +115,16 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
     // this code works fine when we already know our total height
     private func layout() {
         let totalWidth = frame.width
+        guard totalWidth > 0 else { return }
         var x: CGFloat = contentInset.left
         var y: CGFloat = contentInset.top
-        var last: UIView?
+        var maxHeightInRow: CGFloat = 0
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
-            if let cached = cache[currentCells[i].id] {
-                size = cached
-            } else {
+//            if let cached = cache[currentCells[i].id] {
+//                size = cached
+//            } else {
                 if let c = childConstraints[currentCells[i].id] {
                     c.constant = frame.width - contentInset.left - contentInset.right
                 } else {
@@ -133,43 +134,55 @@ class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
                 }
                 view.layoutIfNeeded()
                 size = view.frame.size
-                cache[currentCells[i].id] = size
-            }
+//                cache[currentCells[i].id] = size
+//            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left
-                y = (last?.frame.maxY ?? 0) + spacing
+                y += maxHeightInRow + spacing
+                maxHeightInRow = 0
                 view.frame.origin = CGPoint(x: x, y: y)
             } else {
                 view.frame.origin = CGPoint(x: x, y: y)
             }
+            maxHeightInRow = max(maxHeightInRow, size.height)
             x = view.frame.maxX + spacing
-            last = view
         }
     }
 
     // this code is 100% correct if given correct width
     private func layoutHeight(for width: CGFloat) -> CGFloat {
         let totalWidth = width
+        guard totalWidth > 0 else { return 0 }
         var x: CGFloat = contentInset.left
         var y: CGFloat = contentInset.top
 
         var result: CGFloat = 0
+        var maxHeightInRow: CGFloat = 0
         for i in 0..<min(currentCells.count, cellViews.count) {
             let view = cellViews[i]
             let size: CGSize
-            if let cached = cache[currentCells[i].id] {
-                size = cached
-            } else {
+//            if let cached = cache[currentCells[i].id] {
+//                size = cached
+//            } else {
+                if let c = childConstraints[currentCells[i].id] {
+                    c.constant = totalWidth - contentInset.left - contentInset.right
+                } else {
+                    let c = view.widthAnchor.constraint(lessThanOrEqualToConstant: totalWidth - contentInset.left - contentInset.right)
+                    c.isActive = true
+                    childConstraints[currentCells[i].id] = c
+                }
                 view.layoutIfNeeded()
                 size = view.frame.size
-                cache[currentCells[i].id] = size
-            }
+//                cache[currentCells[i].id] = size
+//            }
             if x + size.width + contentInset.right > totalWidth {
                 x = contentInset.left + size.width + spacing
-                y += size.height + spacing
+                y += maxHeightInRow + spacing
+                maxHeightInRow = 0
             } else {
                 x += size.width + spacing
             }
+            maxHeightInRow = max(maxHeightInRow, size.height)
             result = max(result, y + size.height + contentInset.bottom)
         }
         return result

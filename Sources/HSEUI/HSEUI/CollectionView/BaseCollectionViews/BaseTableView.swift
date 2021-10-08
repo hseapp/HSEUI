@@ -22,10 +22,9 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         }
     }
     
-    override var contentOffset: CGPoint {
-        didSet {
-//            if contentOffset != oldValue { updateScrollEnabled() }
-        }
+    override func adjustedContentInsetDidChange() {
+        super.adjustedContentInsetDidChange()
+        heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
     }
     
     private var contentSizeChanged: (() -> ())?
@@ -52,6 +51,12 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         heightConstraint = heightAnchor.constraint(equalToConstant: heightConstant)
         heightConstraint?.priority = UILayoutPriority(925)
         heightConstraint?.isActive = false
+        contentInsetAdjustmentBehavior = .always
+        #if !targetEnvironment(macCatalyst)
+        if #available(iOS 15.0, *) {
+            self.sectionHeaderTopPadding = 0
+        }
+        #endif
     }
 
     required init?(coder: NSCoder) {
@@ -84,6 +89,7 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        if disableLayout { disableLayout = false; return }
         updateScrollEnabled()
     }
     
@@ -94,43 +100,45 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         super.addSubview(view)
     }
     
+    private var disableLayout = false
     private func updateScrollEnabled() {
         let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
         let newValue = round(delta) != 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
+        disableLayout = true
         if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        updateScrollEnabled()
-        super.touchesBegan(touches, with: event)
-    }
-    
-    override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
-        return super.touchesShouldBegin(touches, with: event, in: view)
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let tr = touch.location(in: self).y - touch.previousLocation(in: self).y
-            if tr > 0 && self.contentOffset.y <= initialContentOffset.y && refresher == nil {
-                self.contentOffset.y = initialContentOffset.y
-                isScrollEnabled = false
-            } else {
-                updateScrollEnabled()
-            }
-        }
-        super.touchesMoved(touches, with: event)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        updateScrollEnabled()
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        updateScrollEnabled()
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        updateScrollEnabled()
+//        super.touchesBegan(touches, with: event)
+//    }
+//
+//    override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
+//        return super.touchesShouldBegin(touches, with: event, in: view)
+//    }
+//
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        for touch in touches {
+//            let tr = touch.location(in: self).y - touch.previousLocation(in: self).y
+//            if tr > 0 && self.contentOffset.y <= initialContentOffset.y && refresher == nil {
+//                self.contentOffset.y = initialContentOffset.y
+//                isScrollEnabled = false
+//            } else {
+//                updateScrollEnabled()
+//            }
+//        }
+//        super.touchesMoved(touches, with: event)
+//    }
+//
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesEnded(touches, with: event)
+//        updateScrollEnabled()
+//    }
+//
+//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesCancelled(touches, with: event)
+//        updateScrollEnabled()
+//    }
     
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
         insertRows(at: indexPaths, with: animation)
@@ -147,7 +155,11 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
             scrollToRow(at: .init(row: 0, section: firstSection), at: .top, animated: true)
         }
     }
-    
+
+    func scroll(to indexPath: IndexPath) {
+        scrollToRow(at: indexPath, at: .middle, animated: true)
+    }
+
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
         reloadRows(at: indexPaths, with: animation)
     }
