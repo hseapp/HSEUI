@@ -11,7 +11,7 @@ public protocol CollectionViewProtocol: UIView {
     var additionalSafeAreaInsets: UIEdgeInsets { set get }
     
     func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool)
-    func scrollTo(cell: CellViewModel)
+    func scroll(to cell: CellViewModel)
     func setUpRefresher(refreshCallback: Action?)
     func setEditing(_ value: Bool)
     func orientationWillChange(newSize: CGSize)
@@ -353,13 +353,13 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.scrollToTop()
     }
 
-    public func scrollTo(cell: CellViewModel) {
+    public func scroll(to cell: CellViewModel) {
         guard let indexPath = indexPath(for: cell) else {
             assertionFailure("There is no such cell")
             return
         }
 
-        contentView.scrollTo(indexPath)
+        contentView.scroll(to: indexPath)
     }
 
     public func setEditing(_ value: Bool) {

@@ -14,7 +14,7 @@ protocol BaseCollectionViewProtocol: UIView {
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func deleteItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func scrollToTop()
-    func scrollTo(_ indexPath: IndexPath)
+    func scroll(to indexPath: IndexPath)
     func setEditing(_ editing: Bool, animated: Bool)
     func reloadItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func reloadSections(_ sections: [Int], with animation: UITableView.RowAnimation)
@@ -69,7 +69,7 @@ extension BaseCollectionViewProtocol {
         assertionFailure("scrollToTop is not implemented for \(String(describing: self))")
     }
 
-    func scrollTo(_ indexPath: IndexPath) {
+    func scroll(to indexPath: IndexPath) {
         assertionFailure("scrollTo is not implemented for \(String(describing: self))")
     }
     

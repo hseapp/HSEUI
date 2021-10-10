@@ -126,6 +126,10 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
     func orientationWillChange(newSize: CGSize) {
         state = .changingOrientation
     }
+    
+    func scrollToTop() {
+        changePage(newIndex: 0, animated: true)
+    }
 
 }
 
