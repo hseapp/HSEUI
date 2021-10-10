@@ -7,18 +7,24 @@
 
 import UIKit
 import HSEUI
+import HSEUIComponents
 
 class ViewController: UIViewController {
     
-    let collectionView = CollectionView(type: .chips)
+    let chipsCollectionView = CollectionView(type: .chips)
+    
+    let listCollectionView = CollectionView(type: .list)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.addSubview(collectionView)
-        collectionView.stickToSuperviewEdges([.left, .right, .top], insets: UIEdgeInsets(top: 90, left: 0, bottom: 0, right: 0))
-        collectionView.backgroundColor = .red
-        collectionView.reload(with: CollectionViewModel(cells: [
+        view.addSubview(chipsCollectionView)
+        view.addSubview(listCollectionView)
+        listCollectionView.stickToSuperviewEdges([.left, .right, .bottom])
+        listCollectionView.top(0, to: chipsCollectionView)
+        chipsCollectionView.stickToSuperviewSafeEdges([.left, .right, .top], insets: UIEdgeInsets(top: 90, left: 0, bottom: 0, right: 0))
+        chipsCollectionView.backgroundColor = .red
+        chipsCollectionView.reload(with: CollectionViewModel(cells: [
             FilterViewModel(text: "TEST", value: 0),
             FilterViewModel(text: "MULTILINE\nMULTILINE", value: 0),
             FilterViewModel(text: "LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG", value: 0),
@@ -39,6 +45,12 @@ class ViewController: UIViewController {
             FilterViewModel(text: "Selectable cells", value: 0, didValueChange: { [weak self] in
                 self?.present(SelectableCellsViewController(), animated: true, completion: nil)
             }),
+        ]))
+        
+        listCollectionView.reload(with: CollectionViewModel(cells: [
+            TextViewModel(text: "Loader VC", tapCallback: { [weak self] in
+                self?.present(LoaderViewController(), animated: true, completion: nil)
+            })
         ]))
     }
 

@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "HSEUI",
+        "repositoryURL": "https://github.com/hseapp/HSEUI",
+        "state": {
+          "branch": "master",
+          "revision": "8858719da0a789c83cc481597f869f440359a172",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

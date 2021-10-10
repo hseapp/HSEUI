@@ -86,7 +86,7 @@ class DefaultRefreshControlView: UIView, RefreshControlViewProtocol {
         imageView.centerVertically()
         imageView.centerHorizontally()
         imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
-        imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8).isActive = true
+//        imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8).isActive = true
         imageHeight = imageView.height(0)
         imageView.aspectRatio()
     }

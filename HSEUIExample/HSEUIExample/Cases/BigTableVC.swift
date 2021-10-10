@@ -7,6 +7,7 @@
 
 import UIKit
 import HSEUI
+import HSEUIComponents
 
 final class BigTableViewController: UIViewController {
 
@@ -27,52 +28,9 @@ final class BigTableViewController: UIViewController {
         collectionView.reload(with: CollectionViewModel(sections: (0...10).map { index in
             return SectionViewModel(cells: (0...10).map { row in
                 return TextViewModel(text: "cell \(row)")
-            }, header: HeaderViewModel(text: "HEADER \(index)"), footer: FooterViewModel(text: "footer \(index)"))
+            }, header: TextViewModel(text: "HEADER \(index)"), footer: TextViewModel(text: "footer \(index)"))
         }))
     }
     
 
-}
-
-extension UIColor {
-    
-    static func randomLight() -> UIColor {
-        return UIColor(red: .random(in: 0.5...1), green: .random(in: 0.5...1), blue: .random(in: 0.5...1), alpha: 1)
-    }
-    
-}
-
-class TextViewModel: CellViewModel {
-    
-    init(text: String, background: UIColor = .randomLight()) {
-        super.init(view: UILabel.self, configureView: { label in
-            label.text = text
-            label.backgroundColor = background
-        })
-    }
-    
-}
-
-class HeaderViewModel: CellViewModel {
-    
-    init(text: String, background: UIColor = .randomLight()) {
-        super.init(view: UILabel.self, configureView: { label in
-            label.font = label.font.withSize(30)
-            label.text = text
-            label.backgroundColor = background
-        })
-    }
-    
-}
-
-class FooterViewModel: CellViewModel {
-    
-    init(text: String, background: UIColor = .randomLight()) {
-        super.init(view: UILabel.self, configureView: { label in
-            label.textAlignment = .right
-            label.text = text
-            label.backgroundColor = background
-        })
-    }
-    
 }
