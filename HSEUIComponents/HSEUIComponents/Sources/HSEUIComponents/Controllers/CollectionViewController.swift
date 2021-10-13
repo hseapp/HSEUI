@@ -18,6 +18,7 @@ open class CollectionViewController: UIViewController {
         public static var skeleton = CollectionViewControllerFeatures(rawValue: 1 << 6)
         public static var topView = CollectionViewControllerFeatures(rawValue: 1 << 7)
         public static var cache = CollectionViewControllerFeatures(rawValue: 1 << 8)
+        public static var dataFetch = CollectionViewControllerFeatures(rawValue: 1 << 9)
         // Make sure you do not add CollectionViewControllerFeatures(rawValue: 1 << 16)
         // Else change Int16 to Int32 and rewrite this comment
         
@@ -59,10 +60,14 @@ open class CollectionViewController: UIViewController {
     public private(set) var withSearch: Bool
     
     public private(set) var withCache: Bool
+    
+    public private(set) var withDataFetch: Bool
 
     public var selectorTitles: [String]
     
     public var defaultPageIndex: Int
+    
+    public let loader = HSELoader()
 
     // MARK: - search
     
@@ -103,6 +108,7 @@ open class CollectionViewController: UIViewController {
         self.withHeader = features.contains(.header)
         self.withTopView = features.contains(.topView)
         self.withCache = features.contains(.cache)
+        self.withDataFetch = features.contains(.dataFetch)
         
         let listsCollectionFeatures: [CollectionViewControllerFeatures] = [.header, .pageSelector]
         if listsCollectionFeatures.allSatisfy({ !features.contains($0) }) && type != .pager {
@@ -222,7 +228,7 @@ open class CollectionViewController: UIViewController {
             bottomButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         }
         
-        if withRefresh {
+        if withRefresh || withDataFetch {
             if withCache {
                 updateCollection(animated: false)
                 mainQueue(delay: 0.2) {
@@ -233,7 +239,7 @@ open class CollectionViewController: UIViewController {
                 if useSkeleton {
                     showSkeletonOrLoader()
                 } else {
-                    showOverflow(HSELoader())
+                    showOverflow(loader)
                 }
                 fetchData()
             }

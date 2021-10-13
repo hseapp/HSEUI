@@ -62,11 +62,12 @@ extension UIViewController {
         let readSkeleton = v.classForCoder == SkeletonLoader.classForCoder() || v.classForCoder == SkeletonView.classForCoder()
         let block = {
             if readSkeleton {
-                UIView.animate(withDuration: 0.2) {
+                UIView.animate(withDuration: 0.5) {
                     v.alpha = 0
                 } completion: { [weak self] _ in
                     guard let self = self else { return }
                     v.removeFromSuperview()
+                    v.alpha = 1
                     SkeletonManager.main.readSkeleton(for: self)
                 }
             } else {

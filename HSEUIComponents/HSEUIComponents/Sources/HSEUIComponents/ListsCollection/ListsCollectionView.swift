@@ -51,9 +51,9 @@ class ListsCollectionView: UIView, CollectionViewProtocol {
         }
     }
     
-    func scrollTo(cell: CellViewModel) {
+    func scroll(to cell: CellViewModel) {
         let collectionView = pages[currentIndex]?.findChildren(CollectionView.self).first
-        collectionView?.scrollTo(cell: cell)
+        collectionView?.scroll(to: cell)
     }
     
     // MARK: - UI
@@ -286,10 +286,6 @@ class ListsCollectionView: UIView, CollectionViewProtocol {
         guard let pagerViewModel = viewModel as? PagerViewModel else { return }
         self.models = pagerViewModel.pages.map { $0.viewModel }
         reload(models: pagerViewModel.pages.map { $0.viewModel }, header: pagerViewModel.header, selectorTitles: pagerViewModel.pages.compactMap { $0.title }, animated: animated)
-    }
-
-    func scroll(to cell: CellViewModel) {
-        assertionFailure("Not implemented yet")
     }
     
     // MARK: - helpers

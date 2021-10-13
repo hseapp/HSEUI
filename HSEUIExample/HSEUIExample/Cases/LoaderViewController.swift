@@ -11,11 +11,15 @@ import HSEUIComponents
 class LoaderViewController: CollectionViewController {
     
     init() {
-        super.init(features: [.refresh])
+        SkeletonManager.isEnabled = true
+        super.init(features: [.refresh, .skeleton])
     }
     
     override func fetchData() {
-        mainQueue(delay: 5) {
+        mainQueue(delay: 2) {
+            self.loader.getState = { .success }
+        }
+        mainQueue(delay: 2) {
             self.updateCollection()
         }
     }
@@ -26,7 +30,19 @@ class LoaderViewController: CollectionViewController {
     
     override func collectionViewModel() -> CollectionViewModelProtocol {
         return CollectionViewModel(cells: [
-            TextViewModel(text: "loaded!")
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
+            TextViewModel(text: "loaded!"),
         ])
     }
     

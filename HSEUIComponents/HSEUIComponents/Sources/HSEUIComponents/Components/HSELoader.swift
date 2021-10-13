@@ -95,9 +95,15 @@ fileprivate class DummyTarget {
 
 public class HSELoader: UIView {
     
-    var cancel: Action?
+    public enum State {
+        case progress(Double)
+        case success
+        case failed
+    }
     
-    var progress: (() -> Double)?
+    public var cancel: Action?
+    
+    public var getState: (() -> State)?
     
     public enum Theme {
         case light, dark, system
@@ -123,9 +129,9 @@ public class HSELoader: UIView {
         layer.cornerRadius = 8
         clipsToBounds = true
         
-        cancel = {
-            
-        }
+//        cancel = {
+//            
+//        }
     }
     
 //    @objc private func drawAnimation() {
@@ -134,28 +140,41 @@ public class HSELoader: UIView {
     
     @objc private func cancelRequest() {
         self.cancel?()
-        self.progress = nil
+        self.getState = nil
     }
     
     private var tickStartDate: Date?
     
+    private var rotationStartDate: Date?
+    
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
-        let rotationDuration: TimeInterval = 3
-        let tickAnimationDuration: TimeInterval = 0.3
-        let normalizedTimer = Double(Int((Date().timeIntervalSince1970 * 1000)) % Int(rotationDuration * 2000)) / (rotationDuration * 1000)
+        let rotationDuration: TimeInterval = 1
+        let tickAnimationDuration: TimeInterval = 0.2
+        let normalizedTimer = Double(Int((Date().timeIntervalSince1970 * 1000)) % Int(rotationDuration * 1000)) / (rotationDuration * 1000)
         
-        let ratio = CGFloat(progress?() ?? normalizedTimer)
+        if rotationStartDate == nil { rotationStartDate = Date() }
+        let timeElapsed = Date().timeIntervalSince(rotationStartDate!)
         
-        let defaultRotation = CGFloat.pi * 2 * normalizedTimer
+        let defaultRatio = 0.1 + ((sin(timeElapsed)+1) * 0.5) * 0.7
         
-        let arcPath = UIBezierPath()
-        let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
         
-        let radius: CGFloat = cancel == nil ? 12 : 18
+        let state = getState?() ?? .progress(defaultRatio)
+//        let ratio = CGFloat(progress?() ?? defaultRatio)
         
         Color.Base.brandTint.setStroke()
-        if ratio < 1 {
+        
+        switch state {
+        case .progress(let progress):
+            Color.Base.brandTint.setStroke()
+            let ratio = 0.1 + progress * 0.85
+            let defaultRotation = CGFloat.pi * 2 * normalizedTimer
+            
+            let arcPath = UIBezierPath()
+            let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+            
+            let radius: CGFloat = cancel == nil ? 12 : 18
+            
             tickStartDate = nil
             arcPath.addArc(withCenter: center, radius: radius, startAngle: defaultRotation, endAngle: defaultRotation + .pi * 2 * ratio, clockwise: true)
             arcPath.lineWidth = 3
@@ -172,10 +191,20 @@ public class HSELoader: UIView {
                 xPath.lineCapStyle = .round
                 xPath.stroke()
             }
-        } else {
+        case .failed:
+            let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+            let markPath = UIBezierPath()
+            markPath.move(to: CGPoint(x: center.x, y: center.y - 10))
+            markPath.addLine(to: CGPoint(x: center.x, y: center.y + 3))
+            markPath.move(to: CGPoint(x: center.x, y: center.y + 8))
+            markPath.addLine(to: CGPoint(x: center.x, y: center.y + 10))
+            markPath.lineWidth = 3
+            markPath.lineCapStyle = .round
+            markPath.stroke()
+        case .success:
+            let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
             if tickStartDate == nil { tickStartDate = Date() }
             let tickProgress = Date().timeIntervalSince(tickStartDate!) / tickAnimationDuration
-            
             let tickSize: CGFloat = 8
             let offset: CGFloat = -4
             let tickPath = UIBezierPath()
@@ -196,6 +225,7 @@ public class HSELoader: UIView {
             tickPath.lineJoinStyle = .round
             tickPath.stroke()
         }
+//        print("render", ratio)
     }
     
     required init?(coder: NSCoder) {
