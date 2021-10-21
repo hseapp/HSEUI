@@ -80,12 +80,18 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
                         }
                         return selected
                     case .single:
-                        if !selected { self._selectedCells = []; return false }
+                        if !selected {
+                            self._selectedCells.remove(IndexPath(row: i, section: j))
+                            return false
+                        }
                         self.deselectAllExcept(i: i, j: j)
                         self._selectedCells = [IndexPath(row: i, section: j)]
                         return selected
                     case .tap:
-                        if !selected { self._selectedCells = []; return false }
+                        if !selected {
+                            self._selectedCells.remove(IndexPath(row: i, section: j))
+                            return false
+                        }
                         self.deselectAllExcept(i: i, j: j)
                         self._selectedCells = [IndexPath(row: i, section: j)]
                         let cell = self.cell(at: IndexPath(row: i, section: j))
