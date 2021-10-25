@@ -140,6 +140,7 @@ class ListsCollectionView: UIView, CollectionViewProtocol {
         pages.forEach({
             $1.findChildren(CollectionView.self).first?.additionalSafeAreaInsets.top = safeAreaInsets.top
         })
+        scrollViewDidScroll(overlayScrollView)
     }
     
     // MARK: - set up

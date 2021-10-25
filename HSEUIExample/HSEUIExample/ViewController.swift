@@ -45,6 +45,10 @@ class ViewController: UIViewController {
             FilterViewModel(text: "Selectable cells", value: 0, didValueChange: { [weak self] in
                 self?.present(SelectableCellsViewController(), animated: true, completion: nil)
             }),
+            
+            FilterViewModel(text: "Lists collection BS", value: 0, didValueChange: { [weak self] in
+                self?.showControllerAsBottomsheet(ListsCollectionBSViewController())
+            }),
         ]))
         
         listCollectionView.reload(with: CollectionViewModel(cells: [
