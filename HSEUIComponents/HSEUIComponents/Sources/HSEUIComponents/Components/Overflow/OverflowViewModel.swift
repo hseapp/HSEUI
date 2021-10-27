@@ -46,7 +46,7 @@ private class OverflowViewContainer: CellView {
     func update(data: OverflowData, position: OverflowViewModel.Position, tapCallback: Action?) {
         var dataCopy = data
         dataCopy.addTapCallback(tapCallback, position: 0)
-        view.data = data
+        view.data = dataCopy
         
         self.position = position
         recalculateViewSize()
