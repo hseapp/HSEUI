@@ -70,7 +70,7 @@ extension Event {
 
 }
 
-public class EventListener {
+public class EventListener: Equatable {
 
     fileprivate var nonce: Int = 0
 
@@ -86,4 +86,9 @@ public class EventListener {
     deinit {
         EventDispatcher.main.remove(listener: self)
     }
+
+    public static func == (lhs: EventListener, rhs: EventListener) -> Bool {
+        return lhs.nonce == rhs.nonce
+    }
+
 }
