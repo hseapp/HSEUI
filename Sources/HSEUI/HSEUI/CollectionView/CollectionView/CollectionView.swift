@@ -9,6 +9,7 @@ public protocol CollectionViewProtocol: UIView {
     var isScrollEnabled: Bool { set get }
     var adjustedContentInset: UIEdgeInsets { get }
     var additionalSafeAreaInsets: UIEdgeInsets { set get }
+    var contentSize: CGSize { get }
     
     func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool)
     func scroll(to cell: CellViewModel)
@@ -76,6 +77,10 @@ public class CollectionView: UIView, CollectionViewProtocol {
         get {
             contentView.spacing
         }
+    }
+    
+    public var contentSize: CGSize {
+        contentView.contentSize
     }
 
     /// collection is editable if it has cells with delete action

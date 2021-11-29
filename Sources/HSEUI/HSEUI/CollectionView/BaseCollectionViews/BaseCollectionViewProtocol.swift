@@ -6,6 +6,7 @@ protocol BaseCollectionViewProtocol: UIView {
     var collectionDataSource: CollectionDataSource? { set get }
     var contentInset: UIEdgeInsets { set get }
     var adjustedContentInset: UIEdgeInsets { get }
+    var contentSize: CGSize { get }
     
     func bind(to viewModel: CollectionViewModelProtocol?)
     func reloadData()

@@ -33,6 +33,10 @@ class WebCollectionView: WKWebView, BaseCollectionViewProtocol {
         }
     }
     
+    var contentSize: CGSize {
+        scrollView.contentSize
+    }
+    
     init() {
         let config: WKWebViewConfiguration = .init()
         super.init(frame: UIScreen.main.bounds, configuration: config)
