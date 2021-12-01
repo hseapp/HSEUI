@@ -105,10 +105,10 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     private var isUpdatingScrollOffsetManually: Bool = false
     
     // cell views
-    var pages: [Int: UIView] = [:]
+    private var pages: [Int: UIView] = [:]
     
     // scrolls of cell views
-    var scrolls: [Int: UIScrollView] = [:]
+    private var scrolls: [Int: UIScrollView] = [:]
     
     private var menuOptionsHeight: CGFloat {
         bottomView.menuOptionsHeight
@@ -125,6 +125,14 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     private var cells: [ListsCollection.BottomPageModel] = []
     
     private var models: [CollectionViewModelProtocol] = []
+    
+    public var showBlur: Bool = true
+    
+    public var showMenuOptionsSeparator: Bool = true {
+        willSet {
+            bottomView.menuOptionsView.separator.isHidden = !newValue
+        }
+    }
     
     // MARK: - Init
     public init() {
@@ -300,9 +308,12 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     
     // MARK: - Helpers
     private func updateBlur() {
-        let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
-        let r = dy / safeAreaInsets.top
-        bottomView.menuOptionsView.updateBlur(alpha: r)
+        var alpha: CGFloat = 0
+        if showBlur {
+            let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
+            alpha = dy / safeAreaInsets.top
+        }
+        bottomView.menuOptionsView.updateBlur(alpha: alpha)
     }
     
     private func updateOverlayOffset() {
