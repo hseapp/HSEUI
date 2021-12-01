@@ -12,7 +12,7 @@ public protocol CollectionViewProtocol: UIView {
     var contentSize: CGSize { get }
     
     func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool)
-    func scroll(to cell: CellViewModel)
+    func scroll(to cell: CellViewModelProtocol)
     func setUpRefresher(refreshCallback: Action?)
     func setEditing(_ value: Bool)
     func orientationWillChange(newSize: CGSize)
@@ -259,18 +259,18 @@ public class CollectionView: UIView, CollectionViewProtocol {
             table.performBatchUpdates{
                 table.indexPathsForVisibleRows?.forEach { ip in
                     if let cell = table.cellForRow(at: ip) as? BaseCellProtocol {
-                        let vm = viewModel.sections[ip.section].cells[ip.row] as! CellViewModel
+                        let vm = viewModel.sections[ip.section].cells[ip.row]
                         vm.update(cell: cell, collectionView: self)
                     }
                 }
                 Set(table.indexPathsForVisibleRows?.map { $0.section } ?? []).forEach { section in
                     if let header = table.headerView(forSection: section) as? BaseCellProtocol {
-                        let vm = viewModel.sections[section].header as! CellViewModel
-                        vm.update(cell: header, collectionView: self)
+                        let vm = viewModel.sections[section].header
+                        vm?.update(cell: header, collectionView: self)
                     }
                     if let footer = table.footerView(forSection: section) as? BaseCellProtocol {
-                        let vm = viewModel.sections[section].footer as! CellViewModel
-                        vm.update(cell: footer, collectionView: self)
+                        let vm = viewModel.sections[section].footer
+                        vm?.update(cell: footer, collectionView: self)
                     }
                 }
             }
@@ -358,7 +358,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.scrollToTop()
     }
 
-    public func scroll(to cell: CellViewModel) {
+    public func scroll(to cell: CellViewModelProtocol) {
         guard let indexPath = indexPath(for: cell) else {
             assertionFailure("There is no such cell")
             return
@@ -376,7 +376,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
 
     private var keyboardListeners: [EventListener] = []
-    public func handleFirstResponder(for cell: CellViewModel) {
+    public func handleFirstResponder(for cell: CellViewModelProtocol) {
         keyboardListeners = []
         keyboardListeners.append(KeyboardEvent.keyboardDidShow.listen { [weak self] (height: CGFloat) in
             guard let self = self else { return }
@@ -392,7 +392,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         })
     }
     
-    private func indexPath(for cell: CellViewModel) -> IndexPath? {
+    private func indexPath(for cell: CellViewModelProtocol) -> IndexPath? {
         guard let vm = currentViewModel else { return nil }
         for i in 0..<vm.sections.count {
             for j in 0..<vm.sections[i].cells.count {
