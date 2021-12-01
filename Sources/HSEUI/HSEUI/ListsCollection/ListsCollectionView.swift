@@ -127,7 +127,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     private var models: [CollectionViewModelProtocol] = []
     
     // MARK: - Init
-    init() {
+    public init() {
         super.init(frame: .zero)
         commonInit()
     }
