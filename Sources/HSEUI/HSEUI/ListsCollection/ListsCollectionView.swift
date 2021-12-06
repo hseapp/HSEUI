@@ -134,6 +134,10 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         }
     }
     
+    public var menuOptions: MenuOptionsCollectionView {
+        bottomView.menuOptionsView
+    }
+    
     // MARK: - Init
     public init() {
         super.init(frame: .zero)
