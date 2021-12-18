@@ -4,6 +4,7 @@ public protocol CollectionViewProtocol: UIView {
     
     var type: CollectionView.CollectionType { get }
     
+    var collectionViewModel: CollectionViewModelProtocol? { get }
     var backgroundColor: UIColor? { set get }
     var isEditable: Bool { get }
     var isScrollEnabled: Bool { set get }
@@ -122,6 +123,12 @@ public class CollectionView: UIView, CollectionViewProtocol {
         )
     }
     
+    public private(set) var collectionViewModel: CollectionViewModelProtocol? {
+        didSet {
+            currentSections = collectionViewModel?.sections.map({ $0.copy() }) ?? []
+        }
+    }
+    
     // MARK: - private properties
     private let contentView: BaseCollectionViewProtocol
 
@@ -130,12 +137,6 @@ public class CollectionView: UIView, CollectionViewProtocol {
     private var refresher: RefreshControl?
     
     private var newViewModel: CollectionViewModelProtocol?
-    
-    private var currentViewModel: CollectionViewModelProtocol? {
-        didSet {
-            currentSections = currentViewModel?.sections.map({ $0.copy() }) ?? []
-        }
-    }
 
     private var currentSections: [SectionViewModelProtocol] = []
 
@@ -186,22 +187,22 @@ public class CollectionView: UIView, CollectionViewProtocol {
 
     // MARK: - reload
     public func reload(with viewModel: CollectionViewModelProtocol? = nil, animated: Bool = false) {
-        self.newViewModel = viewModel ?? currentViewModel
+        self.newViewModel = viewModel ?? collectionViewModel
         let reloadBlock = { [weak self] in
             guard let self = self else { return }
             guard let newViewModel = self.newViewModel else { return }
             self.contentView.bind(to: newViewModel)
-            if animated && self.currentViewModel != nil && newViewModel is CollectionViewModel {
+            if animated && self.collectionViewModel != nil && newViewModel is CollectionViewModel {
                 self.animateDiff(viewModel: newViewModel)
-                self.currentViewModel = newViewModel
+                self.collectionViewModel = newViewModel
             } else {
-                self.currentViewModel = newViewModel
+                self.collectionViewModel = newViewModel
                 self.contentView.reloadData()
             }
         }
-        if currentViewModel?.isScrolling == true {
+        if collectionViewModel?.isScrolling == true {
             self.refresher?.endRefreshing()
-            currentViewModel?.whenStoppedCallback = { reloadBlock() }
+            collectionViewModel?.whenStoppedCallback = { reloadBlock() }
         } else if self.refresher?.isRefreshing == true {
             self.refresher?.endRefreshing()
             mainQueue(delay: 0.2) { reloadBlock() }
@@ -292,7 +293,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
     
     public func reloadCells(_ cells: [CellViewModelProtocol]) {
-        guard let viewModel = currentViewModel else { return }
+        guard let viewModel = collectionViewModel else { return }
         var indexesToReload: [IndexPath] = []
         for (i, section) in viewModel.sections.enumerated() {
             for (j, cell) in section.cells.enumerated() {
@@ -307,7 +308,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
     
     public func reloadSections(_ sections: [SectionViewModelProtocol]) {
-        guard let viewModel = currentViewModel else { return }
+        guard let viewModel = collectionViewModel else { return }
         var indexesToReload: [Int] = []
         for (i, section) in viewModel.sections.enumerated() {
             for sectionToReload in sections {
@@ -372,7 +373,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
 
     public func deselectAllCells() {
-        currentViewModel?.deselectAllCells()
+        collectionViewModel?.deselectAllCells()
     }
 
     private var keyboardListeners: [EventListener] = []
@@ -382,7 +383,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
             guard let self = self else { return }
             self.contentView.contentInset.bottom = height
             guard let indexPath = self.indexPath(for: cell) else { return }
-            self.currentViewModel?.setCellVisible.raise(data: indexPath)
+            self.collectionViewModel?.setCellVisible.raise(data: indexPath)
         })
         keyboardListeners.append(KeyboardEvent.keyboardWillHide.listen { [weak self] in
             UIView.animate(withDuration: 0.3) {
@@ -393,7 +394,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
     
     private func indexPath(for cell: CellViewModelProtocol) -> IndexPath? {
-        guard let vm = currentViewModel else { return nil }
+        guard let vm = collectionViewModel else { return nil }
         for i in 0..<vm.sections.count {
             for j in 0..<vm.sections[i].cells.count {
                 if vm.sections[i].cells[j].id == cell.id { return IndexPath(row: j, section: i) }
@@ -457,7 +458,7 @@ extension CollectionView: CustomCollectionViewDataSource {
 extension CollectionView: WebViewDataSource {
     
     func link() -> String? {
-        return (currentViewModel as? WebViewModel)?.link
+        return (collectionViewModel as? WebViewModel)?.link
     }
     
 }

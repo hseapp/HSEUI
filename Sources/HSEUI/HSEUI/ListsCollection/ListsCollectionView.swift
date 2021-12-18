@@ -25,6 +25,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     // MARK: - CollectionViewProtocol
     public var type: CollectionView.CollectionType { return .pager }
     
+    public private(set) var collectionViewModel: CollectionViewModelProtocol?
+    
     public var isEditable: Bool {
         pages[currentIndex]?.findChildren(CollectionView.self).first?.isEditable ?? false
     }
@@ -286,6 +288,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         
         // internal reload
         guard let pagerViewModel = viewModel as? PagerViewModel else { return }
+        self.collectionViewModel = pagerViewModel
         self.models = pagerViewModel.pages.map { $0.viewModel }
         reload(models: pagerViewModel.pages.map { $0.viewModel }, header: pagerViewModel.header, selectorTitles: pagerViewModel.pages.compactMap { $0.title }, animated: animated)
     }
