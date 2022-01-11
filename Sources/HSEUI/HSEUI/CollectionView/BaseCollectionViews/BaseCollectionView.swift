@@ -78,7 +78,10 @@ class BaseCollectionView: UICollectionView, BaseCollectionViewProtocol {
     }
     
     func scrollToTop() {
-        scrollToItem(at: .init(row: 0, section: 0), at: .top, animated: true)
+        if contentOffset != .zero,
+           let firstSection = (0..<numberOfSections).first(where: { numberOfItems(inSection: $0) > 0 }) {
+            scrollToRow(at: .init(row: 0, section: firstSection), at: .top, animated: true)
+        }
     }
 
     func scroll(to indexPath: IndexPath) {
