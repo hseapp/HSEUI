@@ -136,7 +136,8 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
 extension PagerCollectionView: UIScrollViewDelegate {
     
     private func getIndex(for offset: CGFloat) -> Int {
-        Int((offset + frame.width / 2) / frame.width)
+        guard frame.width > 0 else { return 0 }
+        return Int((offset + frame.width / 2) / frame.width)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
