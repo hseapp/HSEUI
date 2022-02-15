@@ -5,9 +5,6 @@
       location = "group:Sources/HSEUI/HSEUI.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:HSEUIComponents/HSEUIComponents.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "container:HSEUIExample/HSEUIExample.xcodeproj">
    </FileRef>
 </Workspace>

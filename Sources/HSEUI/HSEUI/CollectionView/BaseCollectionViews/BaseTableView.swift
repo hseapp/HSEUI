@@ -89,6 +89,7 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        refreshControl?.frame = CGRect(x: 0, y: 0, width: frame.width, height: contentOffset.y)
         if disableLayout { disableLayout = false; return }
         updateScrollEnabled()
     }
@@ -96,8 +97,13 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     private weak var refresher: UIRefreshControl?
     
     override func addSubview(_ view: UIView) {
-        if refresher == nil { refresher = view as? UIRefreshControl }
-        super.addSubview(view)
+        if refresher == nil, let v = view as? UIRefreshControl {
+            refresher = v
+            super.addSubview(view)
+            refreshControl = refresher
+        } else {
+            super.addSubview(view)
+        }
     }
     
     private var disableLayout = false

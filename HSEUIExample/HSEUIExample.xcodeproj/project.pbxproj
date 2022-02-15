@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		354C064727BBF64300693105 /* LargeTitleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354C064627BBF64300693105 /* LargeTitleController.swift */; };
+		354C064927BBF86600693105 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354C064827BBF86600693105 /* NavigationController.swift */; };
 		35CFADA827062FBE0030BF9A /* HSBottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 35CFADA727062FBE0030BF9A /* HSBottomSheet */; };
 		35CFADAA270630040030BF9A /* OptionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFADA9270630040030BF9A /* OptionPickerViewController.swift */; };
 		35CFADAE270631D50030BF9A /* BS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFADAD270631D50030BF9A /* BS.swift */; };
@@ -41,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		354C064627BBF64300693105 /* LargeTitleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeTitleController.swift; sourceTree = "<group>"; };
+		354C064827BBF86600693105 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		35CFADA9270630040030BF9A /* OptionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPickerViewController.swift; sourceTree = "<group>"; };
 		35CFADAD270631D50030BF9A /* BS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BS.swift; sourceTree = "<group>"; };
 		35CFADAF27063F220030BF9A /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 				35D21CAF270DB8F70055625F /* SelectableCells.swift */,
 				35D21D602713841D0055625F /* LoaderViewController.swift */,
 				35D21DCC2726DEA90055625F /* ListsCollectionBS.swift */,
+				354C064627BBF64300693105 /* LargeTitleController.swift */,
 			);
 			path = Cases;
 			sourceTree = "<group>";
@@ -112,6 +117,7 @@
 				35DF354727020DD5008ABFA3 /* ViewController.swift */,
 				35CFADBB270B51680030BF9A /* Cases */,
 				35CFADAD270631D50030BF9A /* BS.swift */,
+				354C064827BBF86600693105 /* NavigationController.swift */,
 				35DF354927020DD5008ABFA3 /* Main.storyboard */,
 				35DF354C27020DD5008ABFA3 /* Assets.xcassets */,
 				35DF354E27020DD5008ABFA3 /* LaunchScreen.storyboard */,
@@ -207,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35DF354827020DD5008ABFA3 /* ViewController.swift in Sources */,
+				354C064927BBF86600693105 /* NavigationController.swift in Sources */,
 				35DF354427020DD5008ABFA3 /* AppDelegate.swift in Sources */,
 				35CFADAA270630040030BF9A /* OptionPickerViewController.swift in Sources */,
 				35CFADAE270631D50030BF9A /* BS.swift in Sources */,
@@ -214,6 +221,7 @@
 				35D21D612713841D0055625F /* LoaderViewController.swift in Sources */,
 				35CFADBA270B51650030BF9A /* BigTableVC.swift in Sources */,
 				35DF354627020DD5008ABFA3 /* SceneDelegate.swift in Sources */,
+				354C064727BBF64300693105 /* LargeTitleController.swift in Sources */,
 				35CFADB027063F220030BF9A /* TextInput.swift in Sources */,
 				35D21CB0270DB8F80055625F /* SelectableCells.swift in Sources */,
 			);
