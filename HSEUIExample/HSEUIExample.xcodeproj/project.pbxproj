@@ -16,8 +16,6 @@
 		35CFADBA270B51650030BF9A /* BigTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFADB9270B51650030BF9A /* BigTableVC.swift */; };
 		35D21CB0270DB8F80055625F /* SelectableCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D21CAF270DB8F70055625F /* SelectableCells.swift */; };
 		35D21D5F271381CE0055625F /* HSEUIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35D21D5E271381CE0055625F /* HSEUIComponents.framework */; };
-		35D21D612713841D0055625F /* LoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D21D602713841D0055625F /* LoaderViewController.swift */; };
-		35D21DCD2726DEA90055625F /* ListsCollectionBS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D21DCC2726DEA90055625F /* ListsCollectionBS.swift */; };
 		35DF354427020DD5008ABFA3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354327020DD5008ABFA3 /* AppDelegate.swift */; };
 		35DF354627020DD5008ABFA3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354527020DD5008ABFA3 /* SceneDelegate.swift */; };
 		35DF354827020DD5008ABFA3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DF354727020DD5008ABFA3 /* ViewController.swift */; };
@@ -51,8 +49,6 @@
 		35CFADB9270B51650030BF9A /* BigTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigTableVC.swift; sourceTree = "<group>"; };
 		35D21CAF270DB8F70055625F /* SelectableCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableCells.swift; sourceTree = "<group>"; };
 		35D21D5E271381CE0055625F /* HSEUIComponents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HSEUIComponents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		35D21D602713841D0055625F /* LoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderViewController.swift; sourceTree = "<group>"; };
-		35D21DCC2726DEA90055625F /* ListsCollectionBS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsCollectionBS.swift; sourceTree = "<group>"; };
 		35DF354027020DD5008ABFA3 /* HSEUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HSEUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35DF354327020DD5008ABFA3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35DF354527020DD5008ABFA3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,8 +81,6 @@
 				35CFADAF27063F220030BF9A /* TextInput.swift */,
 				35CFADB9270B51650030BF9A /* BigTableVC.swift */,
 				35D21CAF270DB8F70055625F /* SelectableCells.swift */,
-				35D21D602713841D0055625F /* LoaderViewController.swift */,
-				35D21DCC2726DEA90055625F /* ListsCollectionBS.swift */,
 				354C064627BBF64300693105 /* LargeTitleController.swift */,
 			);
 			path = Cases;
@@ -217,8 +211,6 @@
 				35DF354427020DD5008ABFA3 /* AppDelegate.swift in Sources */,
 				35CFADAA270630040030BF9A /* OptionPickerViewController.swift in Sources */,
 				35CFADAE270631D50030BF9A /* BS.swift in Sources */,
-				35D21DCD2726DEA90055625F /* ListsCollectionBS.swift in Sources */,
-				35D21D612713841D0055625F /* LoaderViewController.swift in Sources */,
 				35CFADBA270B51650030BF9A /* BigTableVC.swift in Sources */,
 				35DF354627020DD5008ABFA3 /* SceneDelegate.swift in Sources */,
 				354C064727BBF64300693105 /* LargeTitleController.swift in Sources */,

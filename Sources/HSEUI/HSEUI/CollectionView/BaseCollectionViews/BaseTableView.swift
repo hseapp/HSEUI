@@ -89,7 +89,8 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        refreshControl?.frame = CGRect(x: 0, y: 0, width: frame.width, height: contentOffset.y)
+        let offsetFromInit = -self.adjustedContentInset.top - contentOffset.y
+        refreshControl?.frame.size.height = offsetFromInit
         if disableLayout { disableLayout = false; return }
         updateScrollEnabled()
     }
