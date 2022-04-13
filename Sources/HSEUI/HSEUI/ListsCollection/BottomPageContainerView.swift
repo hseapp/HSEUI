@@ -1,23 +1,8 @@
 import UIKit
 
-// MARK: - BottomPagePresentable
-protocol __BottomPagePresentable: UIView {
-    var menuOptionsHeight: CGFloat { get }
-    var menuOptionsView: MenuOptionsCollectionView { get }
-    var pagerView: CollectionView { get }
-    var pagerDelegate: PagerDelegate? { set get }
-    
-    func reload(cells: [ListsCollection.BottomPageModel], selectorTitles: [String], animated: Bool)
-    func setMenuOptionsVisible()
-    func orientationWillChange(newSize: CGSize)
-}
-
-// MARK: - BottomPageContainerView
 extension ListsCollection {
     
-    typealias BottomPagePresentable = __BottomPagePresentable
-    
-    class BottomPageContainerView: UIView, BottomPagePresentable {
+    final class BottomPageContainerView: UIView {
         
         /// this enum is used to prevent blinking when user selects page which index differs from the current one by 2 or more
         enum MenuOptionsState {

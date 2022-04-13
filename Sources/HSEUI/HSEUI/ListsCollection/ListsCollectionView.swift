@@ -90,7 +90,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         return cv
     }()
     
-    private let bottomView: ListsCollection.BottomPagePresentable = ListsCollection.BottomPageContainerView()
+    private let bottomView = ListsCollection.BottomPageContainerView()
     
     // MARK: - KVO
     private var headerKVO: NSKeyValueObservation?
