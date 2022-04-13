@@ -19,7 +19,6 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     private var reloadState: ReloadState = .default
-    
     private var refresherState: RefresherState = .default
     
     // MARK: - CollectionViewProtocol
@@ -93,42 +92,31 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     private let bottomView = ListsCollection.BottomPageContainerView()
     
     // MARK: - KVO
+    
     private var headerKVO: NSKeyValueObservation?
-    
     private var scrollKVO: NSKeyValueObservation?
-    
     private var scrollOffsetKVO: NSKeyValueObservation?
     
     // MARK: - Other properties
     private let refreshAnimationDelay: TimeInterval = 1
-    
     private let eps: CGFloat = 1 / UIScreen.main.scale
-    
     private var isUpdatingScrollOffsetManually: Bool = false
     
-    // cell views
     private var pages: [Int: UIView] = [:]
-    
-    // scrolls of cell views
     private var scrolls: [Int: UIScrollView] = [:]
+    private var contentOffsets: [Int: CGFloat] = [:]
+    private var cells: [ListsCollection.BottomPageModel] = []
+    private var models: [CollectionViewModelProtocol] = []
+    
+    private var refresher: RefreshControl?
+    private var headerViewHeight: NSLayoutConstraint?
+    public var showBlur: Bool = true
+    
+    private var currentIndex: Int
     
     private var menuOptionsHeight: CGFloat {
         bottomView.menuOptionsHeight
     }
-    
-    private var refresher: RefreshControl?
-    
-    private var headerViewHeight: NSLayoutConstraint?
-    
-    private var currentIndex: Int = 0
-    
-    private var contentOffsets: [Int: CGFloat] = [:]
-    
-    private var cells: [ListsCollection.BottomPageModel] = []
-    
-    private var models: [CollectionViewModelProtocol] = []
-    
-    public var showBlur: Bool = true
     
     public var showMenuOptionsSeparator: Bool = true {
         willSet {
@@ -141,7 +129,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     // MARK: - Init
-    public init() {
+    public init(pageIndex index: Int) {
+        currentIndex = index
         super.init(frame: .zero)
         commonInit()
     }
@@ -260,6 +249,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             cells = models.map({ ListsCollection.BottomPageModel(viewModel: $0) })
             bottomView.reload(cells: cells, selectorTitles: selectorTitles, animated: false)
             cells.enumerated().forEach({ scrolls[$0] = $1.getCellView()?.findChildren(UIScrollView.self).first })
+            
+            changePageOnTheNextRunLoopCycle()
             pageDidChange(currentIndex)
         }
         
@@ -314,6 +305,12 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     
     
     // MARK: - Helpers
+    private func changePageOnTheNextRunLoopCycle() {
+        RunLoop.main.perform { [self] in
+            bottomView.pagerView.changePage(newIndex: currentIndex, animated: false)
+        }
+    }
+    
     private func updateBlur() {
         var alpha: CGFloat = 0
         if showBlur {
