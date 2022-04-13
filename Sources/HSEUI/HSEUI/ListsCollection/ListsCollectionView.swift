@@ -129,7 +129,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     // MARK: - Init
-    public init(pageIndex index: Int) {
+    public init(pageIndex index: Int = 0) {
         currentIndex = index
         super.init(frame: .zero)
         commonInit()
