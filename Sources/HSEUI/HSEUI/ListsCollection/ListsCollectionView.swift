@@ -101,6 +101,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     private let refreshAnimationDelay: TimeInterval = 1
     private let eps: CGFloat = 1 / UIScreen.main.scale
     private var isUpdatingScrollOffsetManually: Bool = false
+    private var willScrollToTop: Bool = false
     
     private var pages: [Int: UIView] = [:]
     private var scrolls: [Int: UIScrollView] = [:]
@@ -342,10 +343,8 @@ extension ListsCollectionView: UIScrollViewDelegate {
         let topHeight = bottomView.frame.minY
         
         if topHeight - scrollView.contentOffset.y > eps {
-            containerScrollView.contentOffset.y = scrollView.contentOffset.y
-            scrolls.forEach({
-                $1.contentOffset.y = 0
-            })
+            containerScrollView.contentOffset.y = willScrollToTop ? 0 : scrollView.contentOffset.y
+            scrolls.forEach { $1.contentOffset.y = 0 }
             contentOffsets.removeAll()
         } else {
             containerScrollView.contentOffset.y = topHeight
@@ -376,6 +375,15 @@ extension ListsCollectionView: UIScrollViewDelegate {
                 self.refresherState = .default
             }
         }
+    }
+    
+    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+        willScrollToTop = false
+    }
+    
+    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        willScrollToTop = overlayScrollView.contentOffset.y > 0
+        return willScrollToTop
     }
     
 }
