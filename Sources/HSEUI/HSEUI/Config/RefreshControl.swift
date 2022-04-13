@@ -93,7 +93,6 @@ class DefaultRefreshControlView: UIView, RefreshControlViewProtocol {
     
     override func layoutSubviews() {
         let size = max(0, min(28, frame.height - 16))
-        
         imageHeight.constant = size
         imageView.transform = .init(rotationAngle: size / 28 * 2)
 
@@ -104,14 +103,21 @@ class DefaultRefreshControlView: UIView, RefreshControlViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private var isAnimating = false
+    
     public func startAnimating() {
-        UIView.animate(withDuration: 0.3, delay: 0, options: .repeat) {
+        isAnimating = true
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveLinear) {
             self.imageView.transform = self.imageView.transform.rotated(by: .pi)
-        } completion: { _ in }
+        } completion: { _ in
+            if self.isAnimating {
+                self.startAnimating()
+            }
+        }
     }
     
     public func stopAnimating() {
-        self.layer.removeAllAnimations()
+        isAnimating = false
     }
     
 }

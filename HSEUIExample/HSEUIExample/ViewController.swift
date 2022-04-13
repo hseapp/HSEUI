@@ -46,16 +46,19 @@ class ViewController: UIViewController {
                 self?.present(SelectableCellsViewController(), animated: true, completion: nil)
             }),
             
-            FilterViewModel(text: "Lists collection BS", value: 0, didValueChange: { [weak self] in
-                self?.showControllerAsBottomsheet(ListsCollectionBSViewController())
+//            FilterViewModel(text: "Lists collection BS", value: 0, didValueChange: { [weak self] in
+//                self?.showControllerAsBottomsheet(ListsCollectionBSViewController())
+//            }),
+            FilterViewModel(text: "LargeTitleController", value: 0, didValueChange: { [weak self] in
+                self?.present(NavigationController(vc: LargeTitleController()), animated: true, completion: nil)
             }),
         ]))
         
-        listCollectionView.reload(with: CollectionViewModel(cells: [
-            TextViewModel(text: "Loader VC", tapCallback: { [weak self] in
-                self?.present(LoaderViewController(), animated: true, completion: nil)
-            })
-        ]))
+//        listCollectionView.reload(with: CollectionViewModel(cells: [
+//            TextViewModel(text: "Loader VC", tapCallback: { [weak self] in
+//                self?.present(LoaderViewController(), animated: true, completion: nil)
+//            })
+//        ]))
     }
 
 }

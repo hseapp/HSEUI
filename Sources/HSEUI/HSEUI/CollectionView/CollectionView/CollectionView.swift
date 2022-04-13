@@ -99,6 +99,9 @@ public class CollectionView: UIView, CollectionViewProtocol {
     public override var bounds: CGRect {
         didSet {
             if oldValue != bounds {
+                if oldValue.width != bounds.width {
+                    self.throwWidth(bounds.width)
+                }
                 didChangeBounds()
             }
         }
@@ -321,7 +324,6 @@ public class CollectionView: UIView, CollectionViewProtocol {
     }
     
     private func didChangeBounds() {
-        self.throwWidth(bounds.width)
         for section in currentSections {
             section.cells.forEach { $0.configure(for: self)}
             section.footer?.configure(for: self)
