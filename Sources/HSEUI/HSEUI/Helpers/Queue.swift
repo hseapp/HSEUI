@@ -7,7 +7,11 @@ public func mainQueue(delay: TimeInterval, block: @escaping Action) {
 }
 
 public func mainQueue(block: @escaping Action) {
-    mainQueue(delay: 0, block: block)
+    guard Thread.isMainThread else {
+        return DispatchQueue.main.async(execute: block)
+    }
+    
+    block()
 }
 
 public func backgroundQueue(delay: Double, block: @escaping Action) {
