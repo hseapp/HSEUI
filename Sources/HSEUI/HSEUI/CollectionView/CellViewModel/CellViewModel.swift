@@ -275,7 +275,7 @@ extension CellViewModel: CellViewModelItem {
 // MARK: - Highlightable
 extension CellViewModel: Highlightable {
     
-    func highlight(backgroundColor: UIColor, with highlightColor: UIColor, overallDuration: TimeInterval) {
+    public func highlight(backgroundColor: UIColor, with highlightColor: UIColor, overallDuration: TimeInterval) {
         apply(type: CellView.self) { view in
             view.highlight(backgroundColor: backgroundColor, with: highlightColor, overallDuration: overallDuration)
         }
