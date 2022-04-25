@@ -13,6 +13,8 @@ open class CellView: UIView, CellViewProtocol {
     private var _selectionCallback: ((Bool) -> Bool)?
 
     public var useChevron: Bool = false
+    
+    public var isHighlighted: Bool = false
 
     open override var backgroundColor: UIColor? {
         didSet {
@@ -167,6 +169,7 @@ extension CellView: Selectable {
 }
 
 // MARK: - Tappable
+
 protocol Tappable {
     func configureTap(callback: Action?)
 }
@@ -177,4 +180,32 @@ extension CellView: Tappable {
         tapCallback = callback
     }
 
+}
+
+// MARK: - Highlightable
+
+extension CellView: Highlightable {
+    
+    func highlight(backgroundColor: UIColor = Color.Base.mainBackground,
+                   with highlightColor: UIColor = Color.Base.selection,
+                   overallDuration: TimeInterval = 1.0) {
+        isHighlighted = true
+        
+        UIView.transition(with: self,
+                          duration: overallDuration / 2,
+                          options: .transitionCrossDissolve) {
+            
+            self.backgroundColor = highlightColor
+        } completion: { _ in
+            self.isHighlighted = false
+            
+            UIView.transition(with: self,
+                              duration: overallDuration / 2,
+                              options: .transitionCrossDissolve) {
+                
+                self.backgroundColor = backgroundColor
+            }
+        }
+    }
+    
 }
