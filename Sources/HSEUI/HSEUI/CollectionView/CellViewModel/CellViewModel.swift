@@ -2,6 +2,8 @@ import UIKit
 
 open class CellViewModel: CellViewModelProtocol {
     
+    public var isHighlighted: Bool = false
+    
     // MARK: - CellPresentable properties
     public lazy var voiceOver = UIAccessibilityElement(accessibilityContainer: self) {
         didSet {
@@ -277,7 +279,11 @@ extension CellViewModel: Highlightable {
     
     public func highlight(backgroundColor: UIColor, with highlightColor: UIColor, overallDuration: TimeInterval) {
         apply(type: CellView.self) { view in
-            view.highlight(backgroundColor: backgroundColor, with: highlightColor, overallDuration: overallDuration)
+            isHighlighted = true
+            
+            view.highlight(backgroundColor: backgroundColor, with: highlightColor, overallDuration: overallDuration, completion: { [weak self] in
+                self?.isHighlighted = false
+            })
         }
     }
     
