@@ -30,7 +30,6 @@ open class CellView: UIView, CellViewProtocol {
         listeners.append(Event.other("UIViewTap\(hashValue)").listen { [weak self] in
             self?.tapCallback?()
         })
-        //comment
     }
 
     public required init?(coder: NSCoder) {
