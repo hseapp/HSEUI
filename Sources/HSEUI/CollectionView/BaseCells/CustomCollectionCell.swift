@@ -16,8 +16,6 @@ class CustomCollectionCell<T>: NSObject where T: UIView {
 
 extension CustomCollectionCell: BaseCellProtocol {
     
-    func voiceOverView() -> UIView { return view }
-    
     func updateConfigurator<C>(with configurator: C) where C : CellViewConfiguratorProtocol {
         if view as? C.T != nil {
             configurator.configureView?(view as! C.T)

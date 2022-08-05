@@ -29,13 +29,12 @@ class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
         let const2 = view.trailing()
         const2.priority = UILayoutPriority(999)
         
+        accessibilityElements = [view]
     }
     
 }
 
 extension BaseCollectionViewCell: BaseCellProtocol {
-    
-    func voiceOverView() -> UIView { return self }
     
     func updateConfigurator<C>(with configurator: C) where C : CellViewConfiguratorProtocol {
         if view as? C.T != nil {
@@ -106,6 +105,7 @@ class BaseCollectionReusableView<T>: UICollectionReusableView where T: UIView {
         let const2 = view.trailing()
         const2.priority = UILayoutPriority(999)
         
+        accessibilityElements = [view]
     }
     
 }

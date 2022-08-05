@@ -5,11 +5,6 @@ open class CellViewModel: CellViewModelProtocol {
     public var isHighlighted: Bool = false
     
     // MARK: - CellPresentable properties
-    public lazy var voiceOver = UIAccessibilityElement(accessibilityContainer: self) {
-        didSet {
-            setVoiceOver(for: view?.voiceOverView())
-        }
-    }
     
     public let id = Nonce()
     
@@ -210,7 +205,6 @@ open class CellViewModel: CellViewModelProtocol {
                 view?.setWidth(floor(width))
             }
         }
-        setVoiceOver(for: view?.voiceOverView())
         view?.getCellView().tag = 0
         view?.getCellView().throwWidth(collectionView.safeBounds.width)
         if let height = preferredHeight(for: collectionView.safeBounds.height) {
@@ -236,14 +230,6 @@ open class CellViewModel: CellViewModelProtocol {
             }
             return self._isSelected
         }
-    }
-    
-    private func setVoiceOver(for view: UIView?) {
-        view?.accessibilityElementsHidden = voiceOver.accessibilityElementsHidden
-        view?.accessibilityLabel = voiceOver.accessibilityLabel
-        view?.accessibilityHint = voiceOver.accessibilityHint
-        view?.accessibilityTraits = voiceOver.accessibilityTraits
-        view?.accessibilityValue = voiceOver.accessibilityValue
     }
 
 }

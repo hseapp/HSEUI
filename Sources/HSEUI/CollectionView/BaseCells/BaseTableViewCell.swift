@@ -31,13 +31,13 @@ class BaseTableViewCell<T>: UITableViewCell where T: UIView {
         
         let const = view.bottom()
         const.priority = UILayoutPriority(999)
+        
+        accessibilityElements = [view]
     }
 
 }
 
 extension BaseTableViewCell: BaseCellProtocol {
-    
-    func voiceOverView() -> UIView { return self }
     
     func updateConfigurator<C>(with configurator: C) where C : CellViewConfiguratorProtocol {
         if view as? C.T != nil {
@@ -102,13 +102,12 @@ class BaseTableViewHeaderFooterCell<T>: UITableViewHeaderFooterView where T: UIV
         let const = view.bottom()
         const.priority = UILayoutPriority(999)
         
+        accessibilityElements = [view]
     }
     
 }
 
 extension BaseTableViewHeaderFooterCell: BaseCellProtocol {
-    
-    func voiceOverView() -> UIView { return self }
     
     func updateConfigurator<C>(with configurator: C) where C : CellViewConfiguratorProtocol {
         if view as? C.T != nil {

@@ -199,6 +199,15 @@ extension CellView: Tappable {
 
     public func configureTap(callback: Action?) {
         tapCallback = callback
+        
+        if tapCallback != nil {
+            isAccessibilityElement = true
+            accessibilityTraits.insert(.button)
+        } else {
+            isAccessibilityElement = false
+            accessibilityTraits.remove(.button)
+            
+        }
     }
 
 }

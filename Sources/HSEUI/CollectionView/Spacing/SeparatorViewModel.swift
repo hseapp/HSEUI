@@ -14,7 +14,6 @@ public class SeparatorViewModel: CellViewModel {
         super.init(view: SeparatorView.self, configureView: { separatorView in
             separatorView.insets = insets
         })
-        voiceOver.accessibilityElementsHidden = true
     }
 
     public override func preferredWidth(for parentWidth: CGFloat) -> CGFloat? {

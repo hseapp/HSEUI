@@ -18,7 +18,6 @@ public class FooterViewModel: CellViewModel {
             view.heightConstant = height
             view.backgroundColor = Color.Collection.table
         })
-        voiceOver.accessibilityElementsHidden = true
     }
 
     public override func preferredWidth(for parentWidth: CGFloat) -> CGFloat? {

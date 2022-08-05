@@ -10,7 +10,6 @@ public protocol BaseCellProtocol: AnyObject {
     func setHeight(_ value: CGFloat)
     func apply<U: UIView>(_ block: (U) -> ())
     func getCellView() -> UIView
-    func voiceOverView() -> UIView
 }
 extension BaseCellProtocol {
     
