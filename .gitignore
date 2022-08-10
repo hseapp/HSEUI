@@ -89,3 +89,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+
+.swiftpm/xcode/xcuserdata/matveykavtorov.xcuserdatad/xcschemes/xcschememanagement.plist
