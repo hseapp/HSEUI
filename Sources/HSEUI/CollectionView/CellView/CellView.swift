@@ -203,6 +203,19 @@ extension CellView: Tappable {
         if tapCallback != nil {
             isAccessibilityElement = true
             accessibilityTraits.insert(.button)
+            accessibilityLabel = ""
+            subviews.forEach {
+                if let label = $0 as? UILabel {
+                    accessibilityLabel! += label.text ?? "" + " "
+                }
+                
+                $0.subviews.forEach {
+                    if let label = $0 as? UILabel {
+                        accessibilityLabel! += label.text ?? "" + " "
+                    }
+                }
+            }
+            
         } else {
             isAccessibilityElement = false
             accessibilityTraits.remove(.button)
