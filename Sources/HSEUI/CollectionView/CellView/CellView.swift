@@ -204,7 +204,6 @@ extension CellView: Tappable {
             isAccessibilityElement = true
             accessibilityTraits.insert(.button)
         } else {
-            isAccessibilityElement = false
             accessibilityTraits.remove(.button)
         }
     }
