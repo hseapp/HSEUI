@@ -279,7 +279,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         }
         
         // internal reload
-        guard let pagerViewModel = viewModel as? PagerViewModel else { return }
+        guard let viewModel = viewModel else { return }
+        let pagerViewModel = viewModel as? PagerViewModel ?? PagerViewModel(pages: [PageViewModel(title: nil, viewModel: viewModel)], header: nil)
         self.collectionViewModel = pagerViewModel
         self.models = pagerViewModel.pages.map { $0.viewModel }
         reload(models: pagerViewModel.pages.map { $0.viewModel }, header: pagerViewModel.header, selectorTitles: pagerViewModel.pages.compactMap { $0.title }, animated: animated)
