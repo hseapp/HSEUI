@@ -181,7 +181,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         bottomView.height(to: containerScrollView)
         bottomView.width(to: containerScrollView)
         
-        containerScrollView.addSubview(menuOptions)
+        bottomView.addSubview(menuOptions)
         menuOptions.stickToSuperviewEdges([.left, .right, .top])
     }
     
