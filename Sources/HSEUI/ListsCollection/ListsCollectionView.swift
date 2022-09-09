@@ -323,7 +323,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             alpha = dy / safeAreaInsets.top
         }
         if headerViewHeight?.constant == 0 {
-            menuOptions.updateBlur(alpha: 1)
+            menuOptions.updateBlur(alpha: showBlur ? 1 : 0)
             menuOptions.transform = .identity.translatedBy(x: 0, y: -max(0, -overlayScrollView.contentOffset.y))
             self.refresher?.verticalOffset = menuOptionsHeight
         } else {
