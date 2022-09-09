@@ -26,8 +26,6 @@ extension ListsCollection {
             }
         }
         
-        var menuOptionsTop: NSLayoutConstraint?
-        
         private var menuOptionsState: MenuOptionsState = .default
         
         // MARK: - pager
@@ -67,9 +65,6 @@ extension ListsCollection {
             addSubview(pagerView)
             pagerView.stickToSuperviewEdges([.left, .right, .bottom])
             pagerViewTop = pagerView.top(0)
-            
-            addSubview(menuOptionsView)
-            menuOptionsTop = menuOptionsView.stickToSuperviewEdges([.left, .right, .top])?.top
         }
         
         

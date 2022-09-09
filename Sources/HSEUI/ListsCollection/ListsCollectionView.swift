@@ -180,6 +180,9 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         bottomView.top(to: headerView)
         bottomView.height(to: containerScrollView)
         bottomView.width(to: containerScrollView)
+        
+        containerScrollView.addSubview(menuOptions)
+        menuOptions.stickToSuperviewEdges([.left, .right, .top])
     }
     
     // MARK: - Observers
@@ -319,7 +322,15 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
             alpha = dy / safeAreaInsets.top
         }
-        bottomView.menuOptionsView.updateBlur(alpha: alpha)
+        if headerViewHeight?.constant == 0 {
+            menuOptions.updateBlur(alpha: 1)
+            menuOptions.transform = .identity.translatedBy(x: 0, y: -max(0, -overlayScrollView.contentOffset.y))
+            self.refresher?.verticalOffset = menuOptionsHeight
+        } else {
+            menuOptions.transform = .identity
+            menuOptions.updateBlur(alpha: alpha)
+            self.refresher?.verticalOffset = 0
+        }
     }
     
     private func updateOverlayOffset() {
