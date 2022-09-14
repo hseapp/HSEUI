@@ -24,7 +24,7 @@ class BaseTableViewCell<T>: UITableViewCell where T: UIView {
     }
     
     private func commonInit() {
-        backgroundColor = .clear
+        backgroundColor = view.backgroundColor
         
         contentView.addSubview(view)
         view.stickToSuperviewEdges([.left, .top, .right])
