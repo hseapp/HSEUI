@@ -10,12 +10,6 @@ final class BaseCollectionView: UICollectionView, BaseCollectionViewProtocol {
         }
     }
     
-    override var contentSize: CGSize {
-        didSet {
-            guard oldValue != contentSize else { return }
-        }
-    }
-    
     // MARK: - Private Properties
     
     private var listeners: [EventListener?] = []
