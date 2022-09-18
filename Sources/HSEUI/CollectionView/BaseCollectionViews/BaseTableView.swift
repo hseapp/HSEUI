@@ -1,15 +1,22 @@
 import UIKit
 
-class BaseTableView: UITableView, BaseCollectionViewProtocol {
+final class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
-    private var heightConstraint: NSLayoutConstraint?
+    // MARK: - Internal Properties
+    
+    var collectionDataSource: CollectionDataSource? {
+        didSet {
+            self.dataSource = collectionDataSource?.dataSource as? UITableViewDataSource
+        }
+    }
 
     var heightConstant: CGFloat = 0 {
         didSet {
             if heightConstant > 44 && heightConstant <= UIScreen.main.bounds.height {
                 heightConstraint?.constant = heightConstant
                 heightConstraint?.isActive = true
-            } else {
+            }
+            else {
                 heightConstraint?.isActive = false
             }
         }
@@ -18,28 +25,20 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     override var contentSize: CGSize {
         didSet {
             heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
-            if oldValue != self.contentSize { contentSizeChanged?() }
         }
     }
     
-    override func adjustedContentInsetDidChange() {
-        super.adjustedContentInsetDidChange()
-        heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
-    }
-    
-    private var contentSizeChanged: (() -> ())?
+    // MARK: - Private Properties
 
     private var listeners: [EventListener?] = []
     
-    private lazy var initialContentOffset: CGPoint = {
-        return self.contentOffset
-    }()
+    private var heightConstraint: NSLayoutConstraint?
     
-    public var collectionDataSource: CollectionDataSource? {
-        didSet {
-            self.dataSource = collectionDataSource?.dataSource as? UITableViewDataSource
-        }
-    }
+    private weak var refresher: UIRefreshControl?
+    
+    private var disableLayout = false
+    
+    // MARK: - Init
 
     init() {
         super.init(frame: UIScreen.main.bounds, style: .plain)
@@ -47,11 +46,14 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         allowsSelection = false
         separatorStyle = .none
         keyboardDismissMode = .onDrag
-        self.backgroundColor = Color.Base.mainBackground
+        backgroundColor = Color.Base.mainBackground
+        
         heightConstraint = heightAnchor.constraint(equalToConstant: heightConstant)
         heightConstraint?.priority = UILayoutPriority(925)
         heightConstraint?.isActive = false
+        
         contentInsetAdjustmentBehavior = .always
+        
         #if !targetEnvironment(macCatalyst)
         if #available(iOS 15.0, *) {
             self.sectionHeaderTopPadding = 0
@@ -62,30 +64,8 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    func bind(to viewModel: CollectionViewModelProtocol?) {
-        delegate = viewModel as? UITableViewDelegate
-        listeners = []
-        listeners.append(viewModel?.setCellVisible.listen { [weak self] (indexPath: IndexPath) in
-            guard let self = self else { return }
-            self.scrollToRow(at: indexPath, at: .middle, animated: true)
-        })
-        contentSizeChanged = { [weak self] in
-            guard let self = self else { return }
-            viewModel?.contentSizeChanged.raise(data: self.contentSize)
-        }
-    }
-
-    func reload(with viewModel: CollectionViewModelProtocol?) {
-        bind(to: viewModel)
-        dataSource = viewModel as? UITableViewDataSource
-        reloadData()
-    }
     
-    override func reloadData() {
-        super.reloadData()
-        self.delegate?.scrollViewDidScroll?(self)
-    }
+    // MARK: - Override UITableView
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -95,57 +75,43 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         updateScrollEnabled()
     }
     
-    private weak var refresher: UIRefreshControl?
-    
     override func addSubview(_ view: UIView) {
         if refresher == nil, let v = view as? UIRefreshControl {
             refresher = v
             super.addSubview(view)
             refreshControl = refresher
-        } else {
+        }
+        else {
             super.addSubview(view)
         }
     }
     
-    private var disableLayout = false
-    private func updateScrollEnabled() {
-        let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
-        let newValue = round(delta) != 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
-        disableLayout = true
-        if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
+    override func adjustedContentInsetDidChange() {
+        super.adjustedContentInsetDidChange()
+        heightConstant = contentSize.height + adjustedContentInset.top + adjustedContentInset.bottom
     }
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        updateScrollEnabled()
-//        super.touchesBegan(touches, with: event)
-//    }
-//
-//    override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
-//        return super.touchesShouldBegin(touches, with: event, in: view)
-//    }
-//
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for touch in touches {
-//            let tr = touch.location(in: self).y - touch.previousLocation(in: self).y
-//            if tr > 0 && self.contentOffset.y <= initialContentOffset.y && refresher == nil {
-//                self.contentOffset.y = initialContentOffset.y
-//                isScrollEnabled = false
-//            } else {
-//                updateScrollEnabled()
-//            }
-//        }
-//        super.touchesMoved(touches, with: event)
-//    }
-//
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesEnded(touches, with: event)
-//        updateScrollEnabled()
-//    }
-//
-//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesCancelled(touches, with: event)
-//        updateScrollEnabled()
-//    }
+    override func reloadData() {
+        super.reloadData()
+        self.delegate?.scrollViewDidScroll?(self)
+    }
+    
+    // MARK: - Internal Methods
+
+    func bind(to viewModel: CollectionViewModelProtocol?) {
+        delegate = viewModel as? UITableViewDelegate
+        listeners = []
+        listeners.append(viewModel?.setCellVisible.listen { [weak self] (indexPath: IndexPath) in
+            guard let self = self else { return }
+            self.scrollToRow(at: indexPath, at: .middle, animated: true)
+        })
+    }
+
+    func reload(with viewModel: CollectionViewModelProtocol?) {
+        bind(to: viewModel)
+        dataSource = viewModel as? UITableViewDataSource
+        reloadData()
+    }
     
     func insertItems(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
         insertRows(at: indexPaths, with: animation)
@@ -181,6 +147,15 @@ class BaseTableView: UITableView, BaseCollectionViewProtocol {
         
         self.setContentOffset(CGPoint(x: 0, y: -self.adjustedContentInset.top - delta), animated: true)
         refresher.beginRefreshing()
+    }
+    
+    // MARK: - Private Properties
+    
+    private func updateScrollEnabled() {
+        let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
+        let newValue = round(delta) != 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
+        disableLayout = true
+        if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
     }
 
 }

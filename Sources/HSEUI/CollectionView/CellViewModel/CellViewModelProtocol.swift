@@ -5,7 +5,6 @@ public protocol CellViewModelProtocol: AnyObject {
     var selectionBlock: ((Bool) -> Bool)? { set get }
     var isSelected: Bool { set get }
     var isEditable: Bool { get }
-    var view: BaseCellProtocol? { set get }
     var preferredAnimation: UITableView.RowAnimation? { get }
     
     func initView() -> UIView
@@ -18,6 +17,10 @@ public protocol CellViewModelProtocol: AnyObject {
     func configure(for view: CollectionView)
     func getCellView() -> UIView?
     func update(cell: BaseCellProtocol, collectionView: CollectionView)
+    
+    func highlight(backgroundColor: UIColor,
+                   with highlightColor: UIColor,
+                   overallDuration: TimeInterval)
     
     func preferredHeight(for parentHeight: CGFloat) -> CGFloat?
     func preferredWidth(for parentWidth: CGFloat) -> CGFloat?

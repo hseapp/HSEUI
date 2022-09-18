@@ -12,12 +12,13 @@ public class HSEUISettings {
     public static let main = HSEUISettings()
     
     public var fontCollection: FontCollection = DefaultFontCollection()
-    
+
     var refreshControlViewClass: RefreshControlViewProtocol.Type = DefaultRefreshControlView.self
+    
+    private init() { }
+    
     public func setRefreshControlClass<T>(_ type: T.Type) where T: RefreshControlViewProtocol {
         refreshControlViewClass = type
     }
-    
-    private init() { }
     
 }

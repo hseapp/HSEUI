@@ -1,10 +1,13 @@
 import UIKit
 
-class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
+final class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
     
-    weak var currentViewModel: CellViewModelItem?
+    // MARK: - Properties
     
     private var view: T
+    weak var currentViewModel: CellViewModelItem?
+    
+    // MARK: - Init
     
     override init(frame: CGRect) {
         view = T.init()
@@ -16,6 +19,8 @@ class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Private Methods
+    
     private func commonInit() {
         backgroundColor = .clear
         
@@ -24,15 +29,17 @@ class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
         addSubview(view)
         view.stickToSuperviewEdges([.left, .top])
         
-        let const = view.bottom()
-        const.priority = UILayoutPriority(999)
-        let const2 = view.trailing()
-        const2.priority = UILayoutPriority(999)
+        let bottomConstraint = view.bottom()
+        bottomConstraint.priority = UILayoutPriority(999)
+        let trailingConstraint = view.trailing()
+        trailingConstraint.priority = UILayoutPriority(999)
         
         accessibilityElements = [view]
     }
     
 }
+
+// MARK: - Protocol BaseCellProtocol
 
 extension BaseCollectionViewCell: BaseCellProtocol {
     
@@ -40,16 +47,16 @@ extension BaseCollectionViewCell: BaseCellProtocol {
         if view as? C.T != nil {
             configurator.configureView?(view as! C.T)
             (view as? CellView)?.useChevron = configurator.useChevron ?? (configurator.tapCallback != nil)
-            (view as? Tappable)?.configureTap(callback: configurator.tapCallback)
+            (view as? CellView)?.configureTap(callback: configurator.tapCallback)
         }
     }
     
     func setSelected(_ value: Bool) {
-        (view as? Selectable)?.setSelected(selected: value, animated: true)
+        (view as? CellView)?.setSelected(selected: value, animated: true)
     }
     
     func setSelectionBlock(_ block: @escaping (Bool) -> Bool) {
-        (view as? Selectable)?.configureSelectionCallback(callback: block)
+        (view as? CellView)?.configureSelectionCallback(callback: block)
     }
     
     func setWidth(_ value: CGFloat) {
@@ -70,42 +77,6 @@ extension BaseCollectionViewCell: BaseCellProtocol {
     
     func getCellView() -> UIView {
         return view
-    }
-    
-}
-
-class BaseCollectionReusableView<T>: UICollectionReusableView where T: UIView {
-    
-    var view: T
-    
-    var configureView: ((T) -> ())? {
-        didSet {
-            configureView?(view)
-        }
-    }
-    
-    override init(frame: CGRect) {
-        view = T.init()
-        super.init(frame: frame)
-        commonInit()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func commonInit() {
-        backgroundColor = Color.Base.mainBackground
-        
-        addSubview(view)
-        view.stickToSuperviewEdges([.left, .top])
-        
-        let const = view.bottom()
-        const.priority = UILayoutPriority(999)
-        let const2 = view.trailing()
-        const2.priority = UILayoutPriority(999)
-        
-        accessibilityElements = [view]
     }
     
 }

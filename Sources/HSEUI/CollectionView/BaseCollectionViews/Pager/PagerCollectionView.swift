@@ -11,12 +11,19 @@ public protocol PagerDelegate: AnyObject {
     func pageDidChange(_ index: Int)
 }
 
-class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable {
+final class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable {
     
-    enum State {
+    // MARK: - Private Types
+    
+    private enum State {
         case changingOrientation
         case `default`
     }
+    
+    // MARK: - Internal Properties
+    
+    weak var pagerDelegate: PagerDelegate?
+    var currentIndex: Int = 0
     
     var contentSize: CGSize {
         return scrollView.contentSize
@@ -24,12 +31,6 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
     
     var contentOffset: CGPoint {
         return scrollView.contentOffset
-    }
-    
-    override var backgroundColor: UIColor? {
-        didSet {
-            scrollView.backgroundColor = backgroundColor
-        }
     }
     
     var contentInset: UIEdgeInsets {
@@ -41,32 +42,36 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
         }
     }
     
-    private weak var dataSource: CustomCollectionViewDataSource?
-    
     var collectionDataSource: CollectionDataSource? {
         didSet {
             dataSource = collectionDataSource?.dataSource as? CustomCollectionViewDataSource
         }
     }
     
-    var currentIndex: Int = 0
+    override var backgroundColor: UIColor? {
+        didSet {
+            scrollView.backgroundColor = backgroundColor
+        }
+    }
     
-    weak var pagerDelegate: PagerDelegate?
+    // MARK: - Private Properties
     
     private var state: State = .default
-
-    private lazy var scrollView: PagerView = {
-        let cv = PagerView()
-        cv.isPagingEnabled = true
-        cv.backgroundColor = Color.Base.mainBackground
-        cv.showsHorizontalScrollIndicator = false
-        cv.showsVerticalScrollIndicator = false
-        return cv
-    }()
+    private var eventListener: EventListener?
+    private weak var dataSource: CustomCollectionViewDataSource?
 
     private lazy var container: UIView = .init()
     
-    private var eventListener: EventListener?
+    private lazy var scrollView: PagerView = {
+        let pagerView = PagerView()
+        pagerView.isPagingEnabled = true
+        pagerView.backgroundColor = Color.Base.mainBackground
+        pagerView.showsHorizontalScrollIndicator = false
+        pagerView.showsVerticalScrollIndicator = false
+        return pagerView
+    }()
+    
+    // MARK: - Init
 
     init() {
         super.init(frame: .zero)
@@ -85,30 +90,17 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func commonInit() {
-        backgroundColor = Color.Collection.table
-        scrollView.delegate = self
-        
-        addSubview(container)
-        container.stickToSuperviewEdges(.all)
-        
-        container.addSubview(scrollView)
-        scrollView.stickToSuperviewEdges(.all)
-        
-    }
-    
-    func changePage(newIndex: Int, animated: Bool) {
-        scrollView.setContentOffset(CGPoint(x: CGFloat(newIndex) * frame.width, y: scrollView.contentOffset.y), animated: animated)
-    }
+    // MARK: - Internal Methods
 
     func reloadData() {
         guard let cells = dataSource?.cells() else { return }
-
         var subviewsOptional: [UIView?] = scrollView.subviews
+        
         while subviewsOptional.count > cells.count {
             subviewsOptional.last??.removeFromSuperview()
             subviewsOptional.removeLast()
         }
+        
         while cells.count > subviewsOptional.count {
             subviewsOptional.append(nil)
         }
@@ -120,6 +112,7 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
                 scrollView.addSubview(newView)
             }
         }
+        
         scrollView.updateSubviews()
     }
     
@@ -130,8 +123,27 @@ class PagerCollectionView: UIView, BaseCollectionViewProtocol, PagerPresentable 
     func scrollToTop() {
         changePage(newIndex: 0, animated: true)
     }
+    
+    func changePage(newIndex: Int, animated: Bool) {
+        scrollView.setContentOffset(CGPoint(x: CGFloat(newIndex) * frame.width, y: scrollView.contentOffset.y), animated: animated)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func commonInit() {
+        backgroundColor = Color.Collection.table
+        scrollView.delegate = self
+        
+        addSubview(container)
+        container.stickToSuperviewEdges(.all)
+        
+        container.addSubview(scrollView)
+        scrollView.stickToSuperviewEdges(.all)
+    }
 
 }
+
+// MARK: - Protocol UIScrollViewDelegate
 
 extension PagerCollectionView: UIScrollViewDelegate {
     

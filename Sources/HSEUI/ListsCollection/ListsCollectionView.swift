@@ -229,7 +229,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             let bottomHeight = max(scroll.contentSize.height, bottomView.frame.height - menuOptionsHeight)
             return CGSize(width: scroll.contentSize.width,
                           height: bottomHeight + headerView.frame.height + menuOptionsHeight)
-        } else {
+        }
+        else {
             let bottomHeight = frame.height - menuOptionsHeight
             return CGSize(width: bottomView.frame.width,
                           height: bottomHeight + headerView.frame.height + menuOptionsHeight)
@@ -237,19 +238,18 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     // MARK: - Reload
-    private func reload(
-        models: [CollectionViewModelProtocol],
-        header: CollectionViewModelProtocol?,
-        selectorTitles: [String],
-        animated: Bool
-    ) {
+    private func reload(models: [CollectionViewModelProtocol],
+                        header: CollectionViewModelProtocol?,
+                        selectorTitles: [String],
+                        animated: Bool) {
         // header view
         headerView.reload(with: header, animated: animated)
         
         // bottom view
         if cells.count == models.count {
             cells.enumerated().forEach({ $1.reload(with: models[$0], animated: animated) })
-        } else {
+        }
+        else {
             cells = models.map({ ListsCollection.BottomPageModel(viewModel: $0) })
             bottomView.reload(cells: cells, selectorTitles: selectorTitles, animated: false)
             cells.enumerated().forEach({ scrolls[$0] = $1.getCellView()?.findChildren(UIScrollView.self).first })
@@ -265,7 +265,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         // refresher state
         if overlayScrollView.isDragging {
             refresherState = .needStopRefresher
-        } else {
+        }
+        else {
             refresherState = .stoppingRefresh
             mainQueue(delay: refreshAnimationDelay) {
                 self.refresher?.endRefreshing()
@@ -276,7 +277,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         // reload state
         if overlayScrollView.contentOffset.y >= 0 {
             reloadState = .default
-        } else {
+        }
+        else {
             reloadState = .needReload(viewModel, animated)
             return
         }
@@ -308,7 +310,6 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         collectionView?.scroll(to: cell)
     }
     
-    
     // MARK: - Helpers
     private func changePageOnTheNextRunLoopCycle() {
         RunLoop.main.perform { [self] in
@@ -322,11 +323,13 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
             alpha = dy / safeAreaInsets.top
         }
+        
         if headerViewHeight?.constant == 0 {
             menuOptions.updateBlur(alpha: showBlur ? 1 : 0)
             menuOptions.transform = .identity.translatedBy(x: 0, y: -max(0, -overlayScrollView.contentOffset.y))
             self.refresher?.verticalOffset = menuOptionsHeight
-        } else {
+        }
+        else {
             menuOptions.transform = .identity
             menuOptions.updateBlur(alpha: alpha)
             self.refresher?.verticalOffset = 0
@@ -347,7 +350,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - Protocol UIScrollViewDelegate
+
 extension ListsCollectionView: UIScrollViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -358,7 +362,8 @@ extension ListsCollectionView: UIScrollViewDelegate {
             containerScrollView.contentOffset.y = willScrollToTop ? 0 : scrollView.contentOffset.y
             scrolls.forEach { $1.contentOffset.y = 0 }
             contentOffsets.removeAll()
-        } else {
+        }
+        else {
             containerScrollView.contentOffset.y = topHeight
             updateScrollOffset()
         }
@@ -400,7 +405,8 @@ extension ListsCollectionView: UIScrollViewDelegate {
     
 }
 
-// MARK: - PagerDelegate
+// MARK: - Protocol PagerDelegate
+
 extension ListsCollectionView: PagerDelegate {
     
     public func pageDidChange(_ index: Int) {
@@ -408,7 +414,8 @@ extension ListsCollectionView: PagerDelegate {
         
         if let offset = contentOffsets[index] {
             overlayScrollView.contentOffset.y = offset
-        } else {
+        }
+        else {
             overlayScrollView.contentOffset.y = containerScrollView.contentOffset.y
         }
         

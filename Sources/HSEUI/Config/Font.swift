@@ -1,27 +1,28 @@
-//
-//  Font.swift
-//  HSEUI
-//
-//  Created by Matvey Kavtorov on 11/27/20.
-//
-
 import UIKit
 
 public enum FontWeight {
-    case medium, regular, semibold, bold
+    
+    case medium
+    case regular
+    case semibold
+    case bold
     
     public init(_ weight: UIFont.Weight) {
         switch weight {
         case .black, .bold, .heavy:
             self = .bold
+            
         case .medium:
             self = .medium
+            
         case .semibold:
             self = .semibold
+            
         default:
             self = .regular
         }
     }
+    
 }
 
 public protocol FontCollection {
@@ -48,10 +49,13 @@ public class DefaultFontCollection: FontCollection {
         switch weight {
         case .regular:
             return UIFont(name: "SFProText-Regular", size: defaultSize) ?? .systemFont(ofSize: defaultSize, weight: .regular)
+            
         case .medium:
             return UIFont(name: "SFProText-Medium", size: defaultSize) ?? .systemFont(ofSize: defaultSize, weight: .medium)
+            
         case .semibold:
             return UIFont(name: "SFProText-Semibold", size: defaultSize) ?? .systemFont(ofSize: defaultSize, weight: .semibold)
+            
         case .bold:
             return UIFont(name: "SFProText-Bold", size: defaultSize) ?? .systemFont(ofSize: defaultSize, weight: .bold)
         }

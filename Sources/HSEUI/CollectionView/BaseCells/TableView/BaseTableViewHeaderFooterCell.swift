@@ -1,6 +1,6 @@
 import UIKit
 
-final class CustomCollectionCell<T>: NSObject where T: UIView {
+final class BaseTableViewHeaderFooterCell<T>: UITableViewHeaderFooterView where T: UIView {
     
     // MARK: - Properties
     
@@ -9,22 +9,39 @@ final class CustomCollectionCell<T>: NSObject where T: UIView {
     
     // MARK: - Init
     
-    init(view: T) {
-        self.view = view
-        self.view.translatesAutoresizingMaskIntoConstraints = false
-        super.init()
+    override init(reuseIdentifier: String?) {
+        view = T.init()
+        super.init(reuseIdentifier: reuseIdentifier)
+        commonInit()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Private Methods
+    
+    private func commonInit() {
+        backgroundView?.backgroundColor = .clear
+        
+        contentView.addSubview(view)
+        view.stickToSuperviewEdges([.left, .top, .right])
+        
+        let bottomConstraint = view.bottom()
+        bottomConstraint.priority = UILayoutPriority(999)
+        
+        accessibilityElements = [view]
     }
     
 }
 
 // MARK: - Protocol BaseCellProtocol
 
-extension CustomCollectionCell: BaseCellProtocol {
+extension BaseTableViewHeaderFooterCell: BaseCellProtocol {
     
     func updateConfigurator<C>(with configurator: C) where C : CellViewConfiguratorProtocol {
         if view as? C.T != nil {
             configurator.configureView?(view as! C.T)
-            (view as? CellView)?.useChevron = configurator.useChevron ?? (configurator.tapCallback != nil)
             (view as? CellView)?.configureTap(callback: configurator.tapCallback)
         }
     }

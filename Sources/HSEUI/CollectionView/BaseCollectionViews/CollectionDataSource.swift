@@ -1,6 +1,6 @@
 import Foundation
 
-class CollectionDataSource {
+final class CollectionDataSource {
     
     init (_ dataSource: NSObjectProtocol) {
         self.dataSource = dataSource

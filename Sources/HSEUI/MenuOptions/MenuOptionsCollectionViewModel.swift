@@ -16,9 +16,12 @@ public class MenuOptionsCollectionViewModel: CellViewModel {
 public class MenuOptionsCollectionView: CellView {
     
     public var collectionHeightConstraint: NSLayoutConstraint?
-
+    public let blur = UIVisualEffectView(effect: UIBlurEffect(style: .defaultHSEUI))
+    
+    public let separator: SeparatorView = .init()
+    
     public let collectionView: CollectionView = {
-        let cv = CollectionView(type: .grid) { _ -> (UICollectionViewFlowLayout) in
+        let collectionView = CollectionView(type: .grid) { _ -> (UICollectionViewFlowLayout) in
             let layout = UICollectionViewFlowLayout()
             layout.sectionInset = .init(top: 0, left: 12, bottom: 0, right: 12)
             layout.minimumLineSpacing = 8
@@ -27,12 +30,8 @@ public class MenuOptionsCollectionView: CellView {
             layout.scrollDirection = .horizontal
             return layout
         }
-        return cv
+        return collectionView
     }()
-    
-    public let separator: SeparatorView = .init()
-    
-    public let blur = UIVisualEffectView(effect: UIBlurEffect(style: .defaultHSEUI))
 
     public override func commonInit() {
         addSubview(blur)

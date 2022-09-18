@@ -22,27 +22,20 @@ public protocol CollectionViewProtocol: UIView {
 
 public class CollectionView: UIView, CollectionViewProtocol {
 
-    // MARK: - CollectionType
+    // MARK: - Public Types
+    
     public enum CollectionType: Equatable {
         case list
         case grid
         case chips
         case pager
         case web
-        
-        var fullWidth: Bool {
-            switch self {
-            case .list, .pager, .web:
-                return true
-            case .grid, .chips:
-                return false
-            }
-        }
     }
+
+    // MARK: - Public Properties
     
     public let type: CollectionType
-
-    // MARK: - public properties
+    
     public override var backgroundColor: UIColor? {
         didSet {
             contentView.backgroundColor = backgroundColor
@@ -84,80 +77,78 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.contentSize
     }
 
-    /// collection is editable if it has cells with delete action
+    // collection is editable if it has cells with delete action
     public var isEditable: Bool {
         for section in currentSections {
-            for cell in section.cells {
-                if cell.isEditable {
-                    return true
-                }
+            for cell in section.cells where cell.isEditable {
+                return true
             }
         }
+        
         return false
     }
     
     public override var bounds: CGRect {
         didSet {
-            if oldValue != bounds {
-                if oldValue.width != bounds.width {
-                    self.throwWidth(bounds.width)
-                }
-                didChangeBounds()
+            guard oldValue != bounds else { return }
+            
+            if oldValue.width != bounds.width {
+                self.throwWidth(bounds.width)
             }
+            
+            didChangeBounds()
         }
     }
     
     public var additionalSafeAreaInsets: UIEdgeInsets = .zero
-    
-    private var totalSafeAreaInsets: UIEdgeInsets {
-        let left: CGFloat = safeAreaInsets.left + additionalSafeAreaInsets.left
-        let right: CGFloat = safeAreaInsets.right + additionalSafeAreaInsets.right
-        let top: CGFloat = safeAreaInsets.top + additionalSafeAreaInsets.top
-        let bottom: CGFloat = safeAreaInsets.bottom + additionalSafeAreaInsets.bottom
-        return .init(top: top, left: left, bottom: bottom, right: right)
-    }
-    
-    @objc public override var safeBounds: CGRect {
-        return CGRect(
-            x: safeAreaInsets.left + bounds.origin.x,
-            y: safeAreaInsets.top + bounds.origin.y,
-            width: bounds.width - totalSafeAreaInsets.left - totalSafeAreaInsets.right,
-            height: bounds.height - totalSafeAreaInsets.top - totalSafeAreaInsets.bottom
-        )
+    public override var safeBounds: CGRect {
+        let safeAreaLeftInset = safeAreaInsets.left + additionalSafeAreaInsets.left
+        let safeAreaRightInset = safeAreaInsets.right + additionalSafeAreaInsets.right
+        let safeAreaTopInset = safeAreaInsets.top + additionalSafeAreaInsets.top
+        let safeAreaBottomInset = safeAreaInsets.bottom + additionalSafeAreaInsets.bottom
+        
+        return CGRect(x: safeAreaInsets.left + bounds.origin.x,
+                      y: safeAreaInsets.top + bounds.origin.y,
+                      width: bounds.width - safeAreaLeftInset - safeAreaRightInset,
+                      height: bounds.height - safeAreaTopInset - safeAreaBottomInset)
     }
     
     public private(set) var collectionViewModel: CollectionViewModelProtocol? {
         didSet {
-            currentSections = collectionViewModel?.sections.map({ $0.copy() }) ?? []
+            currentSections = collectionViewModel?.sections.map { $0.copy() } ?? []
         }
     }
     
-    // MARK: - private properties
+    // MARK: - Private Properties
+    
     private let contentView: BaseCollectionViewProtocol
-
-    private var refreshCallback: Action?
+    private var currentSections: [SectionViewModel] = []
 
     private var refresher: RefreshControl?
+    private var keyboardListeners: [EventListener] = []
+
+    // MARK: - Init
     
-    private var newViewModel: CollectionViewModelProtocol?
-
-    private var currentSections: [SectionViewModelProtocol] = []
-
-    // MARK: - init
-    public init(type: CollectionType, layoutConfigurator: ((UICollectionViewFlowLayout) -> (UICollectionViewFlowLayout))? = nil) {
+    public init(type: CollectionType,
+                layoutConfigurator: ((UICollectionViewFlowLayout) -> (UICollectionViewFlowLayout))? = nil) {
         self.type = type
+        
         switch type {
         case .grid:
             contentView = BaseCollectionView(layoutConfigurator: layoutConfigurator)
+            
         case .list:
             contentView = BaseTableView()
             assert(layoutConfigurator == nil)
+            
         case .chips:
             contentView = ChipsCollectionView()
             assert(layoutConfigurator == nil)
+            
         case .pager:
             contentView = PagerCollectionView()
             assert(layoutConfigurator == nil)
+            
         case .web:
             contentView = WebCollectionView()
             assert(layoutConfigurator == nil)
@@ -169,9 +160,9 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.stickToSuperviewSafeEdges([.left, .right])
         contentView.collectionDataSource = CollectionDataSource(self)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        contentView.addGestureRecognizer(tap)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        contentView.addGestureRecognizer(tapGestureRecognizer)
         
         _ = KeyboardObserver.main
     }
@@ -179,47 +170,146 @@ public class CollectionView: UIView, CollectionViewProtocol {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc private func dismissKeyboard() {
-        contentView.endEditing(false)
-    }
-    
-    public func beginRefreshing() {
-        contentView.beginRefreshing()
-    }
 
-    // MARK: - reload
+    // MARK: - Public Methods
+    
     public func reload(with viewModel: CollectionViewModelProtocol? = nil, animated: Bool = false) {
-        self.newViewModel = viewModel ?? collectionViewModel
+        let newViewModel = viewModel ?? collectionViewModel
+        
         let reloadBlock = { [weak self] in
-            guard let self = self else { return }
-            guard let newViewModel = self.newViewModel else { return }
+            guard let self = self, let newViewModel = newViewModel else { return }
             self.contentView.bind(to: newViewModel)
+            
             if animated && self.collectionViewModel != nil && newViewModel is CollectionViewModel {
                 self.animateDiff(viewModel: newViewModel)
                 self.collectionViewModel = newViewModel
-            } else {
+            }
+            else {
                 self.collectionViewModel = newViewModel
                 self.contentView.reloadData()
             }
         }
+        
         if collectionViewModel?.isScrolling == true {
             self.refresher?.endRefreshing()
             collectionViewModel?.whenStoppedCallback = { reloadBlock() }
-        } else if self.refresher?.isRefreshing == true {
+        }
+        else if self.refresher?.isRefreshing == true {
             self.refresher?.endRefreshing()
             mainQueue(delay: 0.2) { reloadBlock() }
-        } else {
+        }
+        else {
             self.refresher?.endRefreshing()
             reloadBlock()
         }
     }
+    
+    public func reloadSections(_ sections: [SectionViewModel]) {
+        guard let viewModel = collectionViewModel else { return }
+        var indexesToReload: [Int] = []
+        
+        for (i, section) in viewModel.sections.enumerated() {
+            for sectionToReload in sections where section.id == sectionToReload.id {
+                indexesToReload.append(i)
+            }
+        }
+        
+        contentView.reloadSections(indexesToReload, with: .fade)
+    }
+    
+    public func reloadCells(_ cells: [CellViewModelProtocol]) {
+        guard let viewModel = collectionViewModel else { return }
+        var indexesToReload: [IndexPath] = []
+        
+        for (i, section) in viewModel.sections.enumerated() {
+            for (j, cell) in section.cells.enumerated() {
+                for cellToReload in cells where cell.id == cellToReload.id {
+                    indexesToReload.append(IndexPath(item: j, section: i))
+                }
+            }
+        }
+        
+        contentView.reloadItems(at: indexesToReload, with: .fade)
+    }
 
+    public func scroll(to cell: CellViewModelProtocol) {
+        guard let indexPath = indexPath(for: cell) else {
+            assertionFailure("There is no such cell")
+            return
+        }
+
+        contentView.scroll(to: indexPath)
+    }
+    
+    public func scrollToTop() {
+        contentView.scrollToTop()
+    }
+
+    public func setEditing(_ value: Bool) {
+        contentView.setEditing(value, animated: true)
+    }
+
+    public func deselectAllCells() {
+        collectionViewModel?.deselectAllCells()
+    }
+    
+    public func setUpRefresher(refreshCallback: Action? = nil) {
+        #if !targetEnvironment(macCatalyst)
+        guard let refreshCallback = refreshCallback else { return }
+        
+        if let refresher = refresher {
+            refresher.refreshCallback = refreshCallback
+        }
+        else {
+            let refresher = RefreshControl()
+            refresher.refreshCallback = refreshCallback
+            contentView.addSubview(refresher)
+            self.refresher = refresher
+        }
+        #endif
+    }
+
+    public func beginRefreshing() {
+        contentView.beginRefreshing()
+    }
+
+    public func handleFirstResponder(for cell: CellViewModelProtocol) {
+        keyboardListeners = []
+        keyboardListeners.append(KeyboardEvent.keyboardDidShow.listen { [weak self] (height: CGFloat) in
+            guard let self = self else { return }
+            self.contentView.contentInset.bottom = height
+            guard let indexPath = self.indexPath(for: cell) else { return }
+            self.collectionViewModel?.setCellVisible.raise(data: indexPath)
+        })
+        
+        keyboardListeners.append(KeyboardEvent.keyboardWillHide.listen { [weak self] in
+            UIView.animate(withDuration: 0.3) {
+                self?.contentView.contentInset.bottom = 0
+            }
+            self?.keyboardListeners = []
+        })
+    }
+    
+    open func orientationWillChange(newSize: CGSize) {
+        contentView.orientationWillChange(newSize: newSize)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func didChangeBounds() {
+        for section in currentSections {
+            section.cells.forEach { $0.configure(for: self) }
+            section.footer?.configure(for: self)
+            section.header?.configure(for: self)
+        }
+    }
+    
     private func animateDiff(viewModel: CollectionViewModelProtocol) {
         while viewModel.sections.count > currentSections.count {
             currentSections.append(SectionViewModel(cells: viewModel.sections[currentSections.count].cells))
-            contentView.insertSections(IndexSet([currentSections.count-1]), with: .fade)
+            contentView.insertSections(IndexSet([currentSections.count - 1]), with: .fade)
         }
+        
         while viewModel.sections.count < currentSections.count {
             currentSections.removeLast()
             contentView.deleteSections(IndexSet([currentSections.count]), with: .fade)
@@ -230,12 +320,13 @@ public class CollectionView: UIView, CollectionViewProtocol {
             for i in 0 ..< viewModel.sections.count {
                 let diffs = viewModel.sections[i].cells.difference(from: self.currentSections[i].cells, by: {
                     self.compareViewModels(lhs: $0, rhs: $1)
-                }).map({ $0 })
+                }).map { $0 }
                 sectionDiffs.append(diffs)
             }
-            for i in 0..<sectionDiffs.count {
+            
+            for i in 0 ..< sectionDiffs.count {
                 let diffs = sectionDiffs[i]
-                for j in 0..<diffs.count {
+                for j in 0 ..< diffs.count {
                     let diff = diffs[j]
                     switch diff {
                     case .insert(var offset, let cell, _):
@@ -247,6 +338,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
                         self.currentSections[i].cells.insert(cell, at: offset)
                         let animation = cell.preferredAnimation ?? .fade
                         self.contentView.insertItems(at: [IndexPath(row: offset, section: i)], with: animation)
+                        
                     case .remove(let offset, _, _):
                         let animation = self.currentSections[i].cells[offset].preferredAnimation ?? .fade
                         self.currentSections[i].cells.remove(at: offset)
@@ -257,10 +349,10 @@ public class CollectionView: UIView, CollectionViewProtocol {
         }
 
         if let table = contentView as? UITableView {
-            table.performBatchUpdates{
+            table.performBatchUpdates {
                 animationBlock()
             } // do not join
-            table.performBatchUpdates{
+            table.performBatchUpdates {
                 table.indexPathsForVisibleRows?.forEach { ip in
                     if let cell = table.cellForRow(at: ip) as? BaseCellProtocol {
                         let vm = viewModel.sections[ip.section].cells[ip.row]
@@ -272,13 +364,15 @@ public class CollectionView: UIView, CollectionViewProtocol {
                         let vm = viewModel.sections[section].header
                         vm?.update(cell: header, collectionView: self)
                     }
+                    
                     if let footer = table.footerView(forSection: section) as? BaseCellProtocol {
                         let vm = viewModel.sections[section].footer
                         vm?.update(cell: footer, collectionView: self)
                     }
                 }
             }
-        } else if let collection = contentView as? UICollectionView {
+        }
+        else if let collection = contentView as? UICollectionView {
             collection.performBatchUpdates {
                 animationBlock()
             } // do not join
@@ -290,126 +384,32 @@ public class CollectionView: UIView, CollectionViewProtocol {
                     }
                 }
             }
-        } else {
+        }
+        else {
             contentView.reloadData()
         }
     }
     
-    public func reloadCells(_ cells: [CellViewModelProtocol]) {
-        guard let viewModel = collectionViewModel else { return }
-        var indexesToReload: [IndexPath] = []
-        for (i, section) in viewModel.sections.enumerated() {
-            for (j, cell) in section.cells.enumerated() {
-                for cellToReload in cells {
-                    if cell.id == cellToReload.id {
-                        indexesToReload.append(IndexPath(item: j, section: i))
-                    }
-                }
-            }
-        }
-        contentView.reloadItems(at: indexesToReload, with: .fade)
-    }
-    
-    public func reloadSections(_ sections: [SectionViewModelProtocol]) {
-        guard let viewModel = collectionViewModel else { return }
-        var indexesToReload: [Int] = []
-        for (i, section) in viewModel.sections.enumerated() {
-            for sectionToReload in sections {
-                if section.id == sectionToReload.id {
-                    indexesToReload.append(i)
-                }
-            }
-        }
-        contentView.reloadSections(indexesToReload, with: .fade)
-    }
-    
-    private func didChangeBounds() {
-        for section in currentSections {
-            section.cells.forEach { $0.configure(for: self)}
-            section.footer?.configure(for: self)
-            section.header?.configure(for: self)
-        }
-    }
-
-    // MARK: - refresh
-    public func setUpRefresher(refreshCallback: Action? = nil) {
-        #if !targetEnvironment(macCatalyst)
-        guard let refreshCallback = refreshCallback else { return }
-        if let refresher = refresher {
-            self.refreshCallback = refreshCallback
-            refresher.refreshCallback = refreshCallback
-        } else {
-            self.refresher = RefreshControl()
-            self.refreshCallback = refreshCallback
-            contentView.addSubview(refresher!)
-            refresher?.refreshCallback = refreshCallback
-        }
-        #endif
-    }
-    
-    public func setRefreshing() {
-        #if !targetEnvironment(macCatalyst)
-        contentView.beginRefreshing()
-        #endif
-    }
-
-    @objc private func refresh() {
-        refreshCallback?()
-    }
-
-    public func scrollToTop() {
-        contentView.scrollToTop()
-    }
-
-    public func scroll(to cell: CellViewModelProtocol) {
-        guard let indexPath = indexPath(for: cell) else {
-            assertionFailure("There is no such cell")
-            return
-        }
-
-        contentView.scroll(to: indexPath)
-    }
-
-    public func setEditing(_ value: Bool) {
-        contentView.setEditing(value, animated: true)
-    }
-
-    public func deselectAllCells() {
-        collectionViewModel?.deselectAllCells()
-    }
-
-    private var keyboardListeners: [EventListener] = []
-    public func handleFirstResponder(for cell: CellViewModelProtocol) {
-        keyboardListeners = []
-        keyboardListeners.append(KeyboardEvent.keyboardDidShow.listen { [weak self] (height: CGFloat) in
-            guard let self = self else { return }
-            self.contentView.contentInset.bottom = height
-            guard let indexPath = self.indexPath(for: cell) else { return }
-            self.collectionViewModel?.setCellVisible.raise(data: indexPath)
-        })
-        keyboardListeners.append(KeyboardEvent.keyboardWillHide.listen { [weak self] in
-            UIView.animate(withDuration: 0.3) {
-                self?.contentView.contentInset.bottom = 0
-            }
-            self?.keyboardListeners = []
-        })
-    }
-    
     private func indexPath(for cell: CellViewModelProtocol) -> IndexPath? {
         guard let vm = collectionViewModel else { return nil }
-        for i in 0..<vm.sections.count {
-            for j in 0..<vm.sections[i].cells.count {
-                if vm.sections[i].cells[j].id == cell.id { return IndexPath(row: j, section: i) }
+        
+        for i in 0 ..< vm.sections.count {
+            for j in 0 ..< vm.sections[i].cells.count
+            where vm.sections[i].cells[j].id == cell.id {
+                return IndexPath(row: j, section: i)
             }
         }
+        
         return nil
     }
     
-    open func orientationWillChange(newSize: CGSize) {
-        contentView.orientationWillChange(newSize: newSize)
+    @objc private func dismissKeyboard() {
+        contentView.endEditing(false)
     }
 
 }
+
+// MARK: - Protocol UITableViewDataSource
 
 extension CollectionView: UITableViewDataSource {
 
@@ -432,6 +432,8 @@ extension CollectionView: UITableViewDataSource {
 
 }
 
+// MARK: - Protocol UICollectionViewDataSource
+
 extension CollectionView: UICollectionViewDataSource {
 
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -449,6 +451,8 @@ extension CollectionView: UICollectionViewDataSource {
 
 }
 
+// MARK: - Protocol CustomCollectionViewDataSource
+
 extension CollectionView: CustomCollectionViewDataSource {
     
     func cells() -> [CellViewModelProtocol] {
@@ -457,6 +461,8 @@ extension CollectionView: CustomCollectionViewDataSource {
     
 }
 
+// MARK: - Protocol WebViewDataSource
+
 extension CollectionView: WebViewDataSource {
     
     func link() -> String? {
@@ -464,6 +470,8 @@ extension CollectionView: WebViewDataSource {
     }
     
 }
+
+// MARK: - Protocol PagerPresentable
 
 extension CollectionView: PagerPresentable {
     
@@ -493,17 +501,20 @@ extension CollectionView {
         if String(describing: lhs) != String(describing: rhs) { return false }
         if let tag = lhs.getCellView()?.tag, tag != 0 { return false }
         if let tag = rhs.getCellView()?.tag, tag != 0 { return false }
+        
         if let view = lhs.getCellView() {
             if rhs.updateView(view: view) == false { return false }
-        } else if let view = rhs.getCellView() {
+        }
+        else if let view = rhs.getCellView() {
             if lhs.updateView(view: view) == false { return false }
         }
+        
         return true
     }
     
 }
 
-fileprivate class KeyboardObserver: NSObject {
+private class KeyboardObserver: NSObject {
     
     static let main = KeyboardObserver()
     
@@ -524,14 +535,18 @@ fileprivate class KeyboardObserver: NSObject {
         switch notification.name {
         case UIResponder.keyboardWillShowNotification:
             KeyboardEvent.keyboardWillShow.raise()
+            
         case UIResponder.keyboardDidShowNotification:
             if let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect {
                 KeyboardEvent.keyboardDidShow.raise(data: keyboardSize.height)
             }
+            
         case UIResponder.keyboardWillHideNotification:
             KeyboardEvent.keyboardWillHide.raise()
+            
         case UIResponder.keyboardDidHideNotification:
             KeyboardEvent.keyboardDidHide.raise()
+            
         default:
             break
         }

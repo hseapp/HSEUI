@@ -24,6 +24,7 @@ let resourceBundle = Bundle._module
 public class Color {
 
     public class Base {
+        
         public static var mainBackground = UIColor(named: "background", in: resourceBundle, compatibleWith: UITraitCollection.current)!
 
         public static var label: UIColor = .label
@@ -53,12 +54,15 @@ public class Color {
         public static var skeleton = UIColor(named: "skeleton", in: resourceBundle, compatibleWith: UITraitCollection.current)!
         
         public static var placeholder = UIColor(named: "placeholder", in: resourceBundle, compatibleWith: UITraitCollection.current)!
+        
     }
 
     public class Collection {
+        
         public static var table = UIColor(named: "table", in: resourceBundle, compatibleWith: UITraitCollection.current)!
 
         public static var header = UIColor(named: "header", in: resourceBundle, compatibleWith: UITraitCollection.current)!
+        
     }
 
 }

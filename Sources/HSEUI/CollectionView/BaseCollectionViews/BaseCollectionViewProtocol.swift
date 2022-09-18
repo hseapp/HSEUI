@@ -46,7 +46,6 @@ extension BaseCollectionViewProtocol {
             if newValue {
                 assertionFailure("set isScrollEnabled is not supported in chips")
             }
-            
         }
     }
     

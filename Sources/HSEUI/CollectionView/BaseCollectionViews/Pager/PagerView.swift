@@ -1,8 +1,17 @@
 import UIKit
 
-class PagerView: UIScrollView {
+final class PagerView: UIScrollView {
+    
+    // MARK: - Private Properties
 
     private var subviewsConstraints: [NSLayoutConstraint?] = []
+    
+    // MARK: - Internal Methods
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentSize.width = CGFloat(subviews.count) * frame.width
+    }
 
     func updateSubviews() {
         subviewsConstraints.forEach({$0?.isActive = false})
@@ -35,11 +44,6 @@ class PagerView: UIScrollView {
             lastView?.rightAnchor.constraint(equalTo: rightAnchor)
         )
         subviewsConstraints.forEach({$0?.isActive = true})
-    }
-
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        contentSize.width = CGFloat(subviews.count) * frame.width
     }
 
 }

@@ -11,29 +11,32 @@ public enum SelectionStyle {
 
 extension SelectionStyle {
     
-    func shouldSelectCell(
-        row: Int,
-        section: Int,
-        selected: Bool,
-        selectedCells: inout Set<IndexPath>,
-        deselectAllExcept: (Int, Int) -> Void,
-        getCell: (IndexPath) -> CellViewModelProtocol?
-    ) -> Bool {
+    func shouldSelectCell(row: Int,
+                          section: Int,
+                          selected: Bool,
+                          selectedCells: inout Set<IndexPath>,
+                          deselectAllExcept: (Int, Int) -> Void,
+                          getCell: (IndexPath) -> CellViewModelProtocol?) -> Bool {
         switch self {
         case .none:
             return false
+            
         case .multiple:
             if selected {
                 selectedCells.insert(IndexPath(row: row, section: section))
-            } else {
+            }
+            else {
                 selectedCells.remove(IndexPath(row: row, section: section))
             }
+            
             return selected
+            
         case .single:
             if !selected { return false }
             deselectAllExcept(row, section)
             selectedCells = [IndexPath(row: row, section: section)]
             return selected
+            
         case .tap:
             if !selected { return false }
             deselectAllExcept(row, section)
@@ -43,6 +46,7 @@ extension SelectionStyle {
                 cell?.isSelected = false
             }
             return selected
+            
         case .picker:
             if !selected {
                 if selectedCells.contains(IndexPath(row: row, section: section)) {
@@ -54,6 +58,7 @@ extension SelectionStyle {
             selectedCells = [IndexPath(row: row, section: section)]
             if let indexPath = indexPath { getCell(indexPath)?.isSelected = false }
             return selected
+            
         case .sectionPicker(let sections):
             if let sections = sections, !sections.contains(section) {
                 return false

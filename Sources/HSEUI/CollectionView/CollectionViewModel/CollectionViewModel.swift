@@ -2,47 +2,43 @@ import UIKit
 
 open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
 
-    // MARK: - private properties
-    private var selectionStyle: SelectionStyle = .none
-
-    private var _selectedCells: Set<IndexPath> = []
-
-    // MARK: - internal properties
-    public var sections: [SectionViewModelProtocol] {
-        didSet {
-            updateSelectionBlocks()
-        }
-    }
-
-    public var whenStoppedCallback: Action?
+    // MARK: - Internal Properties
 
     public var contentOffsetChanged = Event.new()
-    
-    public var contentSizeChanged = Event.new()
-    
     public var setCellVisible = Event.new()
+    
+    public var whenStoppedCallback: Action?
+    
+    public var sections: [SectionViewModel] {
+        didSet { updateSelectionBlocks() }
+    }
+    
+    public var selectedCells: [CellViewModelProtocol] {
+        return selectedCellsIndexPaths.compactMap { self.cell(at: $0) }
+    }
     
     public var isScrolling: Bool = false {
         didSet {
-            if isScrolling == false, isScrolling != oldValue {
-                whenStoppedCallback?()
-            }
+            guard isScrolling == false, isScrolling != oldValue else { return }
+            whenStoppedCallback?()
         }
     }
+    
+    // MARK: - Private Properties
+    
+    private var selectionStyle: SelectionStyle = .none
+    private var selectedCellsIndexPaths: Set<IndexPath> = []
 
-    public var selectedCells: [CellViewModelProtocol] {
-        return _selectedCells.compactMap { self.cell(at: $0) }
-    }
-
-    // MARK: - init
-    public init(sections: [SectionViewModelProtocol] = [], selectionStyle: SelectionStyle = .none) {
+    // MARK: - Init
+    
+    public init(sections: [SectionViewModel] = [], selectionStyle: SelectionStyle = .none) {
         self.sections = sections
         self.selectionStyle = selectionStyle
         super.init()
         self.updateSelectionBlocks()
     }
 
-    public init(section: SectionViewModelProtocol, selectionStyle: SelectionStyle = .none) {
+    public init(section: SectionViewModel, selectionStyle: SelectionStyle = .none) {
         self.sections = [section]
         self.selectionStyle = selectionStyle
         super.init()
@@ -63,68 +59,86 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
         self.updateSelectionBlocks()
     }
 
-    // MARK: - update selection blocks
+    // MARK: - Public Methods
+    
+    public func deselectAllCells() {
+        selectedCells.forEach { cell in
+            cell.isSelected = false
+        }
+        self.selectedCellsIndexPaths = []
+    }
+    
+    public func copy() -> CollectionViewModelProtocol {
+        CollectionViewModel(sections: sections, selectionStyle: selectionStyle)
+    }
+    
+    // MARK: - Private Methods
+    
     private func updateSelectionBlocks() {
         sections.enumerated().forEach { j, section in
             section.cells.enumerated().forEach { i, cell in
                 cell.selectionBlock = { [weak self] selected in
                     guard let self = self else { return false }
+                    let currentIndexPath = IndexPath(row: i, section: j)
+                    
                     switch self.selectionStyle {
                     case .none:
                         return false
+                        
                     case .multiple:
                         if selected {
-                            self._selectedCells.insert(IndexPath(row: i, section: j))
-                        } else {
-                            self._selectedCells.remove(IndexPath(row: i, section: j))
+                            self.selectedCellsIndexPaths.insert(currentIndexPath)
+                        }
+                        else {
+                            self.selectedCellsIndexPaths.remove(currentIndexPath)
                         }
                         return selected
+                        
                     case .single:
-                        if !selected {
-                            self._selectedCells.remove(IndexPath(row: i, section: j))
+                        guard selected else {
+                            self.selectedCellsIndexPaths.remove(currentIndexPath)
                             return false
                         }
+                        
                         self.deselectAllExcept(i: i, j: j)
-                        self._selectedCells = [IndexPath(row: i, section: j)]
+                        self.selectedCellsIndexPaths = [currentIndexPath]
                         return selected
+                        
                     case .tap:
-                        if !selected {
-                            self._selectedCells.remove(IndexPath(row: i, section: j))
+                        guard selected else {
+                            self.selectedCellsIndexPaths.remove(currentIndexPath)
                             return false
                         }
+                        
                         self.deselectAllExcept(i: i, j: j)
-                        self._selectedCells = [IndexPath(row: i, section: j)]
-                        let cell = self.cell(at: IndexPath(row: i, section: j))
-                        mainQueue(delay: 0.3) {
-                            cell?.isSelected = false
-                        }
+                        self.selectedCellsIndexPaths = [currentIndexPath]
+                        
+                        let cell = self.cell(at: currentIndexPath)
+                        mainQueue(delay: 0.3) { cell?.isSelected = false }
                         return selected
+                        
                     case .picker:
-                        if !selected {
-                            if self._selectedCells.contains(IndexPath(row: i, section: j)) {
-                                return true
-                            }
+                        guard selected else {
+                            if self.selectedCellsIndexPaths.contains(currentIndexPath) { return true }
                             return false
                         }
-                        let indexPath = self._selectedCells.first
-                        self._selectedCells = [IndexPath(row: i, section: j)]
+                        
+                        let indexPath = self.selectedCellsIndexPaths.first
+                        self.selectedCellsIndexPaths = [currentIndexPath]
                         if let indexPath = indexPath { self.cell(at: indexPath)?.isSelected = false }
                         return selected
+                        
                     case .sectionPicker:
-                        if !selected {
-                            if self._selectedCells.contains(IndexPath(row: i, section: j)) {
-                                return true
-                            }
+                        guard selected else {
+                            if self.selectedCellsIndexPaths.contains(currentIndexPath) { return true }
                             return false
                         }
-                        let indexPaths = self._selectedCells.filter { $0.section == j }
-                        indexPaths.forEach {
-                            self._selectedCells.remove($0)
-                        }
-                        indexPaths.forEach {
-                            self.cell(at: $0)?.isSelected = false
-                        }
-                        self._selectedCells.insert(IndexPath(row: i, section: j))
+                        
+                        let indexPaths = self.selectedCellsIndexPaths.filter { $0.section == j }
+                        indexPaths.forEach { self.selectedCellsIndexPaths.remove($0) }
+                        indexPaths.forEach { self.cell(at: $0)?.isSelected = false }
+                        
+                        self.selectedCellsIndexPaths.insert(currentIndexPath)
                         return selected
                     }
                 }
@@ -138,33 +152,18 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
         return sections[indexPath.section].cells[indexPath.row]
     }
 
-    // MARK: - deselection
     private func deselectAllExcept(i targetI: Int, j targetJ: Int) {
-        self._selectedCells.forEach({ indexPath in
+        self.selectedCellsIndexPaths.forEach { indexPath in
             if indexPath.row != targetI || indexPath.section != targetJ {
                 self.cell(at: indexPath)?.isSelected = false
             }
-        })
-    }
-
-    public func deselectAllCells() {
-        selectedCells.forEach { cell in
-            cell.isSelected = false
         }
-        self._selectedCells = []
-    }
-    
-    public func isEqual(to viewModel: CollectionViewModelProtocol?) -> Bool {
-        self == viewModel
-    }
-    
-    public func copy() -> CollectionViewModelProtocol {
-        CollectionViewModel(sections: sections, selectionStyle: selectionStyle)
     }
 
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - Protocol UICollectionViewDelegate
+
 extension CollectionViewModel: UICollectionViewDelegate {
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -173,14 +172,35 @@ extension CollectionViewModel: UICollectionViewDelegate {
 
 }
 
-// MARK: - UITableViewDelegate
-extension CollectionViewModel: UITableViewDelegate {
+// MARK: - Protocol UITableViewDelegate
 
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let cellViewModel = sections[section].footer
-        let view = cellViewModel?.getCell(for: tableView, indexPath: IndexPath(row: -1, section: section), kind: .headerFooter)
-        return view
+extension CollectionViewModel: UITableViewDelegate {
+    
+    // MARK: Cells
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row < 0 {
+            return UITableView.automaticDimension
+        }
+        
+        guard indexPath.section < sections.count, indexPath.row < sections[indexPath.section].cells.count else {
+            return UITableView.automaticDimension
+        }
+        
+        if let height = cell(at: indexPath)?.preferredHeight(for: tableView.safeBounds.height) { return height }
+        return UITableView.automaticDimension
     }
+    
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let height = cell(at: indexPath)?.preferredHeight(for: tableView.safeBounds.height) { return height }
+        return 44
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.cell(at: indexPath)?.willBeDisplayed(viewModel: self)
+    }
+    
+    // MARK: Headers
 
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cellViewModel = sections[section].header
@@ -190,27 +210,45 @@ extension CollectionViewModel: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         guard sections.count > section, sections[section].header != nil else { return 0 }
-        if let h = sections[section].header?.preferredHeight(for: tableView.safeBounds.height) { return h }
+        if let height = sections[section].header?.preferredHeight(for: tableView.safeBounds.height) { return height }
         return 44
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard section < sections.count else { return UITableView.automaticDimension }
+        if let height = sections[section].header?.preferredHeight(for: tableView.safeBounds.height) { return height }
+        return UITableView.automaticDimension
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        sections[section].header?.willBeDisplayed(viewModel: self)
+    }
+    
+    // MARK: Footers
+    
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let cellViewModel = sections[section].footer
+        let view = cellViewModel?.getCell(for: tableView, indexPath: IndexPath(row: -1, section: section), kind: .headerFooter)
+        return view
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         guard sections.count > section, sections[section].footer != nil else { return 0 }
-        if let h = sections[section].footer?.preferredHeight(for: tableView.safeBounds.height) { return h }
+        if let height = sections[section].footer?.preferredHeight(for: tableView.safeBounds.height) { return height }
         return 44
     }
-
-    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        self.cell(at: indexPath)?.willBeDisplayed(viewModel: self)
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        guard section < sections.count else { return UITableView.automaticDimension }
+        if let height = sections[section].footer?.preferredHeight(for: tableView.safeBounds.height) { return height }
+        return UITableView.automaticDimension
     }
-
-    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        sections[section].header?.willBeDisplayed(viewModel: self)
-    }
-
+    
     public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         sections[section].footer?.willBeDisplayed(viewModel: self)
     }
+    
+    // MARK: Scroll View
     
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         isScrolling = true
@@ -221,10 +259,11 @@ extension CollectionViewModel: UITableViewDelegate {
     }
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if !decelerate {
-            isScrolling = false
-        }
+        guard !decelerate else { return }
+        isScrolling = false
     }
+    
+    // MARK: Swipe Actions
 
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return UISwipeActionsConfiguration(actions: cell(at: indexPath)?.leadingSwipeActions() ?? [])
@@ -234,56 +273,11 @@ extension CollectionViewModel: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: cell(at: indexPath)?.trailingSwipeActions() ?? [])
     }
 
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row < 0 {
-            return UITableView.automaticDimension
-        }
-        guard indexPath.section < sections.count, indexPath.row < sections[indexPath.section].cells.count else {
-            return UITableView.automaticDimension
-        }
-        if let h = cell(at: indexPath)?.preferredHeight(for: tableView.safeBounds.height) { return h }
-        return UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard section < sections.count else { return UITableView.automaticDimension }
-        if let h = sections[section].header?.preferredHeight(for: tableView.safeBounds.height) { return h }
-        return UITableView.automaticDimension
-    }
-
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        guard section < sections.count else { return UITableView.automaticDimension }
-        if let h = sections[section].footer?.preferredHeight(for: tableView.safeBounds.height) { return h }
-        return UITableView.automaticDimension
-    }
-    
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let h = cell(at: indexPath)?.preferredHeight(for: tableView.safeBounds.height) { return h }
-        return 44
-    }
-
 }
 
-// MARK: - UITableViewDataSource
-extension CollectionViewModel: UITableViewDataSource {
+// MARK: - Private Helpers
 
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-    }
-
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].cells.count
-    }
-
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellViewModel = cell(at: indexPath)
-        return cellViewModel?.getCell(for: tableView, indexPath: indexPath, kind: .cell) as? UITableViewCell ?? UITableViewCell()
-    }
-
-}
-
-
-fileprivate extension Array {
+private extension Array {
     
     func get(_ index: Int) -> Element? {
         return (index < self.count && index >= 0) ? self[index] : nil

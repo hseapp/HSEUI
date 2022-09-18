@@ -1,11 +1,3 @@
-//
-//  FooterViewModel.swift
-//  HSEAppX
-//
-//  Created by Mikhail on 13.08.2020.
-//  Copyright © 2020 National Research University “Higher School of Economics“. All rights reserved.
-//
-
 import UIKit
 
 public class FooterViewModel: CellViewModel {
@@ -27,4 +19,5 @@ public class FooterViewModel: CellViewModel {
     public override func preferredHeight(for parentHeight: CGFloat) -> CGFloat? {
         return height
     }
+    
 }

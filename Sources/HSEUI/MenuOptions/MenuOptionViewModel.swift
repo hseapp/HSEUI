@@ -19,6 +19,8 @@ class MenuOptionView: CellView {
     var option: String? {
         didSet { update() }
     }
+    
+    private var isSelected: Bool = false
 
     private let title: UILabel = {
         let label = UILabel()
@@ -39,21 +41,21 @@ class MenuOptionView: CellView {
         guard let option = option else { return }
         if option.count > 25 {
             self.title.font = Font.main(weight: .medium).withSize(12)
-        } else {
+        }
+        else {
             self.title.font = Font.main(weight: .medium).withSize(16)
         }
         self.title.text = option
         title.textColor = isSelected ? Color.Base.brandTint : Color.Base.secondary
     }
 
-    private var isSelected: Bool = false
-
     override func setSelectedUI(selected: Bool) {
         isSelected = selected
         if selected {
             backgroundColor = Color.Base.brandTint.withAlphaComponent(0.08)
             title.textColor = Color.Base.brandTint
-        } else {
+        }
+        else {
             backgroundColor = Color.Base.mainBackground
             title.textColor = Color.Base.secondary
         }

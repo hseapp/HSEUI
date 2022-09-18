@@ -1,10 +1,3 @@
-//
-//  WebCollectionView.swift
-//  HSEUI
-//
-//  Created by Mikhail on 06.07.2021.
-//
-
 import UIKit
 #if !os(watchOS)
 import WebKit
@@ -14,9 +7,9 @@ protocol WebViewDataSource: AnyObject {
     func link() -> String?
 }
 
-class WebCollectionView: WKWebView, BaseCollectionViewProtocol {
+final class WebCollectionView: WKWebView, BaseCollectionViewProtocol {
     
-    private weak var dataSource: WebViewDataSource?
+    // MARK: - Internal Properties
     
     var collectionDataSource: CollectionDataSource? {
         didSet {
@@ -37,6 +30,12 @@ class WebCollectionView: WKWebView, BaseCollectionViewProtocol {
         scrollView.contentSize
     }
     
+    // MARK: - Internal Properties
+    
+    private weak var dataSource: WebViewDataSource?
+    
+    // MARK: - Init
+    
     init() {
         let config: WKWebViewConfiguration = .init()
         super.init(frame: UIScreen.main.bounds, configuration: config)
@@ -49,6 +48,8 @@ class WebCollectionView: WKWebView, BaseCollectionViewProtocol {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Internal Methods
     
     func reloadData() {
         guard let link = dataSource?.link() else { return }

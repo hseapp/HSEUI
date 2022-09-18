@@ -10,7 +10,8 @@ private class EventDispatcher {
         listener.nonce = Nonce()
         if subscriptions[listener.event] == nil {
             subscriptions[listener.event] = [listener.nonce: listener.callback]
-        } else {
+        }
+        else {
             subscriptions[listener.event]![listener.nonce] = listener.callback
         }
     }
@@ -34,12 +35,14 @@ private class EventDispatcher {
 }
 
 public enum Event: Hashable {
+    
     case withId(Int)
     case other(String)
 
     public static func new() -> Event {
         return Event.withId(Nonce())
     }
+    
 }
 
 extension Event {
@@ -73,9 +76,7 @@ extension Event {
 public class EventListener: Equatable {
 
     fileprivate var nonce: Int = 0
-
     fileprivate var callback: Any
-
     fileprivate var event: Event
 
     init(event: Event, callback: Any) {

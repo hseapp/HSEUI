@@ -10,8 +10,10 @@ extension UICollectionView {
         switch kind {
         case .cell:
             return register(BaseCollectionViewCell<T>.self, forCellWithReuseIdentifier: reuseId)
+            
         case .header:
             return register(BaseCollectionReusableView<T>.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: reuseId)
+            
         case .footer:
             return register(BaseCollectionReusableView<T>.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: reuseId)
         }
@@ -25,8 +27,10 @@ extension UICollectionView {
         switch kind {
         case .cell:
             fatalError("Only header and footer can be dequeued with parameter kind")
+            
         case .header:
             return dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: reuseId, for: indexPath) as! BaseCollectionReusableView<T>
+            
         case .footer:
             return dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: reuseId, for: indexPath) as! BaseCollectionReusableView<T>
         }

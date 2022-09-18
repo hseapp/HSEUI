@@ -17,7 +17,8 @@ extension ListsCollection {
                     .build()
                 
                 updateConfigurator(configurator)
-            } else {
+            }
+            else {
                 super.init(view: WebView.self)
                 
                 let configurator = CellViewConfigurator<WebView>.builder()
@@ -35,7 +36,8 @@ extension ListsCollection {
                 apply(type: WebView.self) { [weak self] view in
                     view.reload(with: self?.viewModel, animated: animated)
                 }
-            } else {
+            }
+            else {
                 apply(type: ListView.self) { [weak self] view in
                     view.reload(with: self?.viewModel, animated: animated)
                 }

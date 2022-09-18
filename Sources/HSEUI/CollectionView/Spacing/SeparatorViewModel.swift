@@ -1,11 +1,3 @@
-//
-//  SeparatorViewModel.swift
-//  HSEAppX
-//
-//  Created by Matvey Kavtorov on 8/12/20.
-//  Copyright © 2020 National Research University “Higher School of Economics“. All rights reserved.
-//
-
 import UIKit
 
 public class SeparatorViewModel: CellViewModel {
@@ -23,6 +15,7 @@ public class SeparatorViewModel: CellViewModel {
     public override func preferredHeight(for parentHeight: CGFloat) -> CGFloat? {
         return 1
     }
+    
 }
 
 public class SeparatorView: CellView {
@@ -35,17 +28,17 @@ public class SeparatorView: CellView {
 
     private var separatorConstraints: AnchoredConstraints?
 
-    private let separator: UIView = {
-        let view = UIView()
-        view.backgroundColor = Color.Base.separator
-        view.isUserInteractionEnabled = false
-        return view
+    private let separatorView: UIView = {
+        let separatorView = UIView()
+        separatorView.backgroundColor = Color.Base.separator
+        separatorView.isUserInteractionEnabled = false
+        return separatorView
     }()
 
     public override func commonInit() {
-        addSubview(separator)
-        separatorConstraints = separator.stickToSuperviewEdges(.all)
-        separatorConstraints?.height = separator.height(0.5)
+        addSubview(separatorView)
+        separatorConstraints = separatorView.stickToSuperviewEdges(.all)
+        separatorConstraints?.height = separatorView.height(0.5)
         widthConstant = 44
     }
 
