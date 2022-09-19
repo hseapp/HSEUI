@@ -1,8 +1,5 @@
 import UIKit
 
-// ---------------------------------------------------------------------------------------------
-// struct to store view's constraints
-
 public struct AnchoredConstraints {
 
     public init() { }
@@ -34,9 +31,6 @@ public struct AnchoredConstraints {
     }
     
 }
-
-// ---------------------------------------------------------------------------------------------
-// extension to facilitate autolayout usage
 
 public extension UIView {
 
@@ -319,4 +313,5 @@ public extension UIView {
         constraint.priority = UILayoutPriority(999)
         return constraint
     }
+    
 }

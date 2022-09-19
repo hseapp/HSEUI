@@ -16,8 +16,11 @@ public protocol BaseCellProtocol: AnyObject {
 
 extension BaseCellProtocol {
     
+    // Need to set up viewModel because every baseCell must have
+    // only one CellViewModel at one time, otherwise there are
+    // some bugs with cells selection during cells reuse
     func setViewModel(_ viewModel: CellViewModel) {
-        currentCellViewModel?.resetBaseCell()
+        currentCellViewModel?.baseCell = nil
         currentCellViewModel = viewModel
     }
     

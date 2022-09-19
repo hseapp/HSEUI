@@ -25,6 +25,19 @@ open class CellViewModel {
             baseCell?.setSelected(newValue)
         }
     }
+    
+    // MARK: - Internal Properties
+    
+    weak var baseCell: BaseCellProtocol? {
+        didSet {
+            oldValue?.currentCellViewModel = nil
+            baseCell?.setViewModel(self)
+            baseCell?.setSelectionBlock(createSelectionBlock())
+            UIView.performWithoutAnimation {
+                baseCell?.setSelected(isSelected)
+            }
+        }
+    }
         
     // MARK: - Private Properties
     
@@ -37,24 +50,13 @@ open class CellViewModel {
     private var viewCheckAndUpdate: (UIView?) -> Bool = { _ in false }
     private var applyConfigurator: Action?
     
-    /// This property is used to store link on `CustomCollectionCell`
+    // This property is used to store link on CustomCollectionCell because baseCell is weak
     private var customCollectionCell: CustomCollectionCell<UIView>?
 
     private var _isSelected: Bool = false {
         didSet {
             if oldValue != _isSelected {
                 selectionCallback?(_isSelected)
-            }
-        }
-    }
-    
-    private weak var baseCell: BaseCellProtocol? {
-        didSet {
-            oldValue?.currentCellViewModel = nil
-            baseCell?.setViewModel(self)
-            baseCell?.setSelectionBlock(createSelectionBlock())
-            UIView.performWithoutAnimation {
-                baseCell?.setSelected(isSelected)
             }
         }
     }
@@ -183,12 +185,6 @@ open class CellViewModel {
                            overallDuration: overallDuration,
                            completion: nil)
         }
-    }
-    
-    // MARK: - Internal Methods
-    
-    func resetBaseCell() {
-        baseCell = nil
     }
     
     // MARK: - Private Methods
