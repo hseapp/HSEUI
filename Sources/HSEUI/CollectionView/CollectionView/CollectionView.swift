@@ -13,7 +13,7 @@ public protocol CollectionViewProtocol: UIView {
     var contentSize: CGSize { get }
     
     func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool)
-    func scroll(to cell: CellViewModelProtocol)
+    func scroll(to cell: CellViewModel)
     func setUpRefresher(refreshCallback: Action?)
     func setEditing(_ value: Bool)
     func orientationWillChange(newSize: CGSize)
@@ -217,7 +217,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.reloadSections(indexesToReload, with: .fade)
     }
     
-    public func reloadCells(_ cells: [CellViewModelProtocol]) {
+    public func reloadCells(_ cells: [CellViewModel]) {
         guard let viewModel = collectionViewModel else { return }
         var indexesToReload: [IndexPath] = []
         
@@ -232,7 +232,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.reloadItems(at: indexesToReload, with: .fade)
     }
 
-    public func scroll(to cell: CellViewModelProtocol) {
+    public func scroll(to cell: CellViewModel) {
         guard let indexPath = indexPath(for: cell) else {
             assertionFailure("There is no such cell")
             return
@@ -273,7 +273,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         contentView.beginRefreshing()
     }
 
-    public func handleFirstResponder(for cell: CellViewModelProtocol) {
+    public func handleFirstResponder(for cell: CellViewModel) {
         keyboardListeners = []
         keyboardListeners.append(KeyboardEvent.keyboardDidShow.listen { [weak self] (height: CGFloat) in
             guard let self = self else { return }
@@ -316,7 +316,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         }
         
         let animationBlock = {
-            var sectionDiffs: [[CollectionDifference<CellViewModelProtocol>.Element]] = []
+            var sectionDiffs: [[CollectionDifference<CellViewModel>.Element]] = []
             for i in 0 ..< viewModel.sections.count {
                 let diffs = viewModel.sections[i].cells.difference(from: self.currentSections[i].cells, by: {
                     self.compareViewModels(lhs: $0, rhs: $1)
@@ -390,7 +390,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
         }
     }
     
-    private func indexPath(for cell: CellViewModelProtocol) -> IndexPath? {
+    private func indexPath(for cell: CellViewModel) -> IndexPath? {
         guard let vm = collectionViewModel else { return nil }
         
         for i in 0 ..< vm.sections.count {
@@ -455,7 +455,7 @@ extension CollectionView: UICollectionViewDataSource {
 
 extension CollectionView: CustomCollectionViewDataSource {
     
-    func cells() -> [CellViewModelProtocol] {
+    func cells() -> [CellViewModel] {
         return currentSections.first?.cells ?? []
     }
     
@@ -496,7 +496,7 @@ extension CollectionView: PagerPresentable {
 
 extension CollectionView {
     
-    func compareViewModels(lhs: CellViewModelProtocol, rhs: CellViewModelProtocol) -> Bool {
+    func compareViewModels(lhs: CellViewModel, rhs: CellViewModel) -> Bool {
         if lhs.id == rhs.id { return true }
         if String(describing: lhs) != String(describing: rhs) { return false }
         if let tag = lhs.getCellView()?.tag, tag != 0 { return false }

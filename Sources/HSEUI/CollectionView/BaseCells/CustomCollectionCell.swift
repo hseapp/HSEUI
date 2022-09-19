@@ -5,7 +5,7 @@ final class CustomCollectionCell<T>: NSObject where T: UIView {
     // MARK: - Properties
     
     private var view: T
-    weak var currentViewModel: CellViewModelItem?
+    weak var currentCellViewModel: CellViewModel?
     
     // MARK: - Init
     

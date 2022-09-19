@@ -5,7 +5,7 @@ import UIKit
 // MARK: - CustomCollectionViewDataSource
 
 protocol CustomCollectionViewDataSource: AnyObject {
-    func cells() -> [CellViewModelProtocol]
+    func cells() -> [CellViewModel]
 }
 
 // MARK: - ChipsCollectionView
@@ -49,7 +49,7 @@ final class ChipsCollectionView: UIScrollView, BaseCollectionViewProtocol {
     private var childConstraints: [Int: NSLayoutConstraint] = [:]
     
     private weak var dataSource: CustomCollectionViewDataSource?
-    private var currentCells: [CellViewModelProtocol] = []
+    private var currentCells: [CellViewModel] = []
     private var cellViews: [UIView] = []
     private var cache: [Int: CGSize] = [:]
 

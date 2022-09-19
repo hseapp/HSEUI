@@ -4,13 +4,13 @@ open class SectionViewModel {
     
     public let id: Int = Nonce()
 
-    public var cells: [CellViewModelProtocol]
-    public var header: CellViewModelProtocol?
-    public var footer: CellViewModelProtocol?
+    public var cells: [CellViewModel]
+    public var header: CellViewModel?
+    public var footer: CellViewModel?
     
-    public init(cells: [CellViewModelProtocol] = [],
-                header: CellViewModelProtocol? = nil,
-                footer: CellViewModelProtocol? = nil) {
+    public init(cells: [CellViewModel] = [],
+                header: CellViewModel? = nil,
+                footer: CellViewModel? = nil) {
         
         self.cells = cells
         self.header = header

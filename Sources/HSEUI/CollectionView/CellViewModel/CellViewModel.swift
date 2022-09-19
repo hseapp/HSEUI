@@ -1,6 +1,6 @@
 import UIKit
 
-open class CellViewModel: CellViewModelProtocol {
+open class CellViewModel {
     
     // MARK: - Public Properties
     
@@ -50,7 +50,7 @@ open class CellViewModel: CellViewModelProtocol {
     
     private weak var baseCell: BaseCellProtocol? {
         didSet {
-            oldValue?.currentViewModel = nil
+            oldValue?.currentCellViewModel = nil
             baseCell?.setViewModel(self)
             baseCell?.setSelectionBlock(createSelectionBlock())
             UIView.performWithoutAnimation {
@@ -118,7 +118,7 @@ open class CellViewModel: CellViewModelProtocol {
             deleteAction()
         })]
     }
-    
+
     // MARK: - Public Methods
     
     public func initView() -> UIView {
@@ -185,6 +185,12 @@ open class CellViewModel: CellViewModelProtocol {
         }
     }
     
+    // MARK: - Internal Methods
+    
+    func resetBaseCell() {
+        baseCell = nil
+    }
+    
     // MARK: - Private Methods
     
     private func setUpReuse<T: UIView>(with configurator: CellViewConfigurator<T>) {
@@ -249,16 +255,6 @@ extension CellViewModel: Hashable {
         hasher.combine(id)
     }
 
-}
-
-// MARK: - Protocol CellViewModelItem
-
-extension CellViewModel: CellViewModelItem {
-    
-    public func reset() {
-        baseCell = nil
-    }
-    
 }
 
 // MARK: - CollectionType Extension

@@ -305,7 +305,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
         bottomView.orientationWillChange(newSize: newSize)
     }
     
-    public func scroll(to cell: CellViewModelProtocol) {
+    public func scroll(to cell: CellViewModel) {
         let collectionView = pages[currentIndex]?.findChildren(CollectionView.self).first
         collectionView?.scroll(to: cell)
     }

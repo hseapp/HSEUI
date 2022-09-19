@@ -16,7 +16,7 @@ extension SelectionStyle {
                           selected: Bool,
                           selectedCells: inout Set<IndexPath>,
                           deselectAllExcept: (Int, Int) -> Void,
-                          getCell: (IndexPath) -> CellViewModelProtocol?) -> Bool {
+                          getCell: (IndexPath) -> CellViewModel?) -> Bool {
         switch self {
         case .none:
             return false

@@ -1,7 +1,7 @@
 import UIKit
 
 public protocol BaseCellProtocol: AnyObject {
-    var currentViewModel: CellViewModelItem? { set get }
+    var currentCellViewModel: CellViewModel? { set get }
     func updateConfigurator<C: CellViewConfiguratorProtocol>(with configurator: C)
     
     func setSelected(_ value: Bool)
@@ -16,9 +16,9 @@ public protocol BaseCellProtocol: AnyObject {
 
 extension BaseCellProtocol {
     
-    func setViewModel(_ vm: CellViewModelItem) {
-        currentViewModel?.reset()
-        currentViewModel = vm
+    func setViewModel(_ viewModel: CellViewModel) {
+        currentCellViewModel?.resetBaseCell()
+        currentCellViewModel = viewModel
     }
     
 }

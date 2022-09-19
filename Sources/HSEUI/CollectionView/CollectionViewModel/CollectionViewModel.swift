@@ -13,7 +13,7 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
         didSet { updateSelectionBlocks() }
     }
     
-    public var selectedCells: [CellViewModelProtocol] {
+    public var selectedCells: [CellViewModel] {
         return selectedCellsIndexPaths.compactMap { self.cell(at: $0) }
     }
     
@@ -45,14 +45,14 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
         self.updateSelectionBlocks()
     }
 
-    public init(cells: [CellViewModelProtocol], selectionStyle: SelectionStyle = .none) {
+    public init(cells: [CellViewModel], selectionStyle: SelectionStyle = .none) {
         self.sections = [SectionViewModel(cells: cells)]
         self.selectionStyle = selectionStyle
         super.init()
         self.updateSelectionBlocks()
     }
 
-    public init(cell: CellViewModelProtocol) {
+    public init(cell: CellViewModel) {
         self.sections = [SectionViewModel(cells: [cell])]
         self.selectionStyle = .none
         super.init()
@@ -146,7 +146,7 @@ open class CollectionViewModel: NSObject, CollectionViewModelProtocol {
         }
     }
     
-    private func cell(at indexPath: IndexPath) -> CellViewModelProtocol? {
+    private func cell(at indexPath: IndexPath) -> CellViewModel? {
         guard sections.count > indexPath.section else { return nil }
         guard sections[indexPath.section].cells.count > indexPath.row else { return nil }
         return sections[indexPath.section].cells[indexPath.row]

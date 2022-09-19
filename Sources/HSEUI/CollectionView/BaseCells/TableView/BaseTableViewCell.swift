@@ -5,7 +5,7 @@ final class BaseTableViewCell<T>: UITableViewCell where T: UIView {
     // MARK: - Properties
     
     private var view: T
-    weak var currentViewModel: CellViewModelItem?
+    weak var currentCellViewModel: CellViewModel?
     
     var useChevron: Bool = false {
         didSet {
