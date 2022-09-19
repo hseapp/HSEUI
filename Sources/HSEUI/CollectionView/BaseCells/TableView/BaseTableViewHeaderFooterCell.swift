@@ -4,8 +4,13 @@ final class BaseTableViewHeaderFooterCell<T>: UITableViewHeaderFooterView where 
     
     // MARK: - Properties
     
-    private var view: T
     weak var currentCellViewModel: CellViewModel?
+    
+    var baseCellView: UIView {
+        return self
+    }
+    
+    private var view: T
     
     // MARK: - Init
     

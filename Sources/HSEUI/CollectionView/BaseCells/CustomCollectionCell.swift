@@ -4,8 +4,13 @@ final class CustomCollectionCell<T>: NSObject where T: UIView {
     
     // MARK: - Properties
     
-    private var view: T
     weak var currentCellViewModel: CellViewModel?
+    
+    var baseCellView: UIView {
+        return view
+    }
+    
+    private var view: T
     
     // MARK: - Init
     

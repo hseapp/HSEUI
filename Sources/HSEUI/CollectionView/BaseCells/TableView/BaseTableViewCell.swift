@@ -4,8 +4,13 @@ final class BaseTableViewCell<T>: UITableViewCell where T: UIView {
     
     // MARK: - Properties
     
-    private var view: T
     weak var currentCellViewModel: CellViewModel?
+    
+    var baseCellView: UIView {
+        return self
+    }
+    
+    private var view: T
     
     var useChevron: Bool = false {
         didSet {

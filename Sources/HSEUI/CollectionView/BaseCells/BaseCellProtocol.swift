@@ -1,7 +1,9 @@
 import UIKit
 
 public protocol BaseCellProtocol: AnyObject {
+    var baseCellView: UIView { get }
     var currentCellViewModel: CellViewModel? { set get }
+    
     func updateConfigurator<C: CellViewConfiguratorProtocol>(with configurator: C)
     
     func setSelected(_ value: Bool)

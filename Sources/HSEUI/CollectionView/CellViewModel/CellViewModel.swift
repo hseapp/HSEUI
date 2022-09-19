@@ -1,5 +1,10 @@
 import UIKit
 
+public enum CellViewModelFeatures {
+    case roundTopCorners
+    case roundBottomCorners
+}
+
 open class CellViewModel {
     
     // MARK: - Public Properties
@@ -24,6 +29,10 @@ open class CellViewModel {
             _isSelected = newValue
             baseCell?.setSelected(newValue)
         }
+    }
+    
+    public var features: [CellViewModelFeatures] = [] {
+        didSet { applyFeatures() }
     }
     
     // MARK: - Internal Properties
@@ -128,6 +137,7 @@ open class CellViewModel {
         customCollectionCell = CustomCollectionCell(view: view)
         self.baseCell = customCollectionCell
         applyConfigurator?()
+        applyFeatures()
         return view
     }
     
@@ -139,6 +149,7 @@ open class CellViewModel {
         baseCell = cell
         applyConfigurator?()
         configure(for: collectionView)
+        applyFeatures()
     }
     
     public func getCell(for tableView: UITableView, indexPath: IndexPath, kind: UITableView.ElementKind = .cell) -> UIView {
@@ -147,6 +158,7 @@ open class CellViewModel {
         baseCell = cell as? BaseCellProtocol
         applyConfigurator?()
         configure(for: tableView.superview as! CollectionView)
+        applyFeatures()
         return cell
     }
     
@@ -156,15 +168,16 @@ open class CellViewModel {
         baseCell = cell as? BaseCellProtocol
         applyConfigurator?()
         configure(for: collectionView.superview as! CollectionView)
+        applyFeatures()
         return cell
-    }
-    
-    public func apply<T: UIView>(type: T.Type, _ block: (T) -> Void) {
-        baseCell?.apply(block)
     }
     
     public func markDirty() {
         getCellView()?.tag = Nonce()
+    }
+    
+    public func apply<T: UIView>(type: T.Type, _ block: (T) -> Void) {
+        baseCell?.apply(block)
     }
     
     public func getCellView() -> UIView? {
@@ -223,6 +236,31 @@ open class CellViewModel {
         applyConfigurator = { [weak self] in
             self?.baseCell?.updateConfigurator(with: configurator)
         }
+    }
+    
+    private func applyFeatures() {
+        guard let baseCellView = baseCell?.baseCellView else { return }
+        guard features.contains(.roundTopCorners) || features.contains(.roundBottomCorners) else {
+            baseCellView.clipsToBounds = false
+            baseCellView.layer.cornerRadius = 0
+            baseCellView.layer.maskedCorners = []
+            return
+        }
+        
+        var cornerMask = CACornerMask()
+        if features.contains(.roundTopCorners) {
+            cornerMask.insert(.layerMaxXMinYCorner)
+            cornerMask.insert(.layerMinXMinYCorner)
+        }
+        
+        if features.contains(.roundTopCorners) {
+            cornerMask.insert(.layerMaxXMaxYCorner)
+            cornerMask.insert(.layerMinXMaxYCorner)
+        }
+        
+        baseCellView.clipsToBounds = true
+        baseCellView.layer.cornerRadius = 12
+        baseCellView.layer.maskedCorners = cornerMask
     }
     
     private func createSelectionBlock() -> (Bool) -> Bool  {
