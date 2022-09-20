@@ -1,6 +1,5 @@
 import Foundation
 
-
 public enum SectionViewModelFeatures {
     case roundTopCorners
     case roundBottomCorners
@@ -19,7 +18,7 @@ open class SectionViewModel {
         didSet { applyFeatures() }
     }
     
-    public var features: [SectionViewModelFeatures] {
+    public var features: Set<SectionViewModelFeatures> {
         didSet { applyFeatures() }
     }
     
@@ -28,7 +27,7 @@ open class SectionViewModel {
     public init(cells: [CellViewModel] = [],
                 header: CellViewModel? = nil,
                 footer: CellViewModel? = nil,
-                features: [SectionViewModelFeatures] = []) {
+                features: Set<SectionViewModelFeatures> = []) {
         
         self.cells = cells
         self.header = header
@@ -43,24 +42,28 @@ open class SectionViewModel {
     public func copy() -> SectionViewModel {
         return SectionViewModel(cells: cells,
                                 header: header,
-                                footer: footer)
+                                footer: footer,
+                                features: features)
     }
     
     // MARK: - Private Methods
     
     private func applyFeatures() {
+        guard features.contains(.roundTopCorners) || features.contains(.roundBottomCorners) else { return }
+        
         for cell in cells {
-            cell.features = []
+            cell.features.remove(.roundTopCorners)
+            cell.features.remove(.roundBottomCorners)
         }
         
         if features.contains(.roundTopCorners) {
             let firstCell = cells.first(where: { !($0 is FooterViewModel) })
-            firstCell?.features.append(.roundTopCorners)
+            firstCell?.features.insert(.roundTopCorners)
         }
         
         if features.contains(.roundTopCorners) {
             let lastCell = cells.last(where: { !($0 is FooterViewModel) })
-            lastCell?.features.append(.roundBottomCorners)
+            lastCell?.features.insert(.roundBottomCorners)
         }
     }
 

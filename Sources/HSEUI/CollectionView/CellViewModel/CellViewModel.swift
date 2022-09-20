@@ -31,7 +31,7 @@ open class CellViewModel {
         }
     }
     
-    public var features: [CellViewModelFeatures] = [] {
+    public var features: Set<CellViewModelFeatures> = [] {
         didSet { applyFeatures() }
     }
     
@@ -239,8 +239,12 @@ open class CellViewModel {
     }
     
     private func applyFeatures() {
+        guard !(baseCell is CustomCollectionCell<UIView>) else { return }
         guard let baseCellView = baseCell?.baseCellView else { return }
-        guard features.contains(.roundTopCorners) || features.contains(.roundBottomCorners) else {
+        
+        guard
+            features.contains(.roundTopCorners) || features.contains(.roundBottomCorners)
+        else {
             baseCellView.clipsToBounds = false
             baseCellView.layer.cornerRadius = 0
             baseCellView.layer.maskedCorners = []
@@ -253,7 +257,7 @@ open class CellViewModel {
             cornerMask.insert(.layerMinXMinYCorner)
         }
         
-        if features.contains(.roundTopCorners) {
+        if features.contains(.roundBottomCorners) {
             cornerMask.insert(.layerMaxXMaxYCorner)
             cornerMask.insert(.layerMinXMaxYCorner)
         }
