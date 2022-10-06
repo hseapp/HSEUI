@@ -48,10 +48,19 @@ open class CellView: UIView {
     public var useChevron: Bool = false
 
     open override var backgroundColor: UIColor? {
-        didSet {
+        set {
             if useChevron, let cell = self.superview?.superview as? UITableViewCell {
-                cell.backgroundColor = backgroundColor
+                super.backgroundColor = .clear
+                cell.backgroundColor = newValue
+            } else {
+                super.backgroundColor = backgroundColor
             }
+        }
+        get {
+            if useChevron, let cell = self.superview?.superview as? UITableViewCell {
+                return cell.backgroundColor
+            }
+            return super.backgroundColor
         }
     }
     
