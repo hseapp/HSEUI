@@ -53,7 +53,7 @@ open class CellView: UIView {
                 super.backgroundColor = .clear
                 cell.backgroundColor = newValue
             } else {
-                super.backgroundColor = backgroundColor
+                super.backgroundColor = newValue
             }
         }
         get {
