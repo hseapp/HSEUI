@@ -154,7 +154,19 @@ extension PagerCollectionView: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard state == .default else { return }
+        let r = abs(scrollView.contentOffset.x.truncatingRemainder(dividingBy: frame.width))
+        let dx = min(r, frame.width - r)
         let newIndex: Int = getIndex(for: scrollView.contentOffset.x)
+        let v = scrollView.subviews[newIndex]
+        if dx == 0 {
+            v.transform = .identity
+        } else {
+            if r < frame.width / 2 {
+                v.transform = .identity.translatedBy(x: max(-6, -dx), y: 0)
+            } else {
+                v.transform = .identity.translatedBy(x: min(6, dx), y: 0)
+            }
+        }
         if newIndex != currentIndex {
             pagerDelegate?.pageDidChange(newIndex)
             currentIndex = newIndex
