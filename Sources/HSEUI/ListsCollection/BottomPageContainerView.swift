@@ -37,13 +37,6 @@ extension ListsCollection {
         
         var pagerViewTop: NSLayoutConstraint?
         
-        // MARK: - other properties
-        override var backgroundColor: UIColor? {
-            didSet {
-                menuOptionsView.backgroundColor = backgroundColor
-            }
-        }
-        
         // MARK: - init
         init() {
             super.init(frame: .zero)

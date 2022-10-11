@@ -242,6 +242,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
                         header: CollectionViewModelProtocol?,
                         selectorTitles: [String],
                         animated: Bool) {
+        
+        menuOptions.shouldRoundTopCorners = header != nil
         // header view
         headerView.reload(with: header, animated: animated)
         
@@ -262,6 +264,8 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     public func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool) {
+        menuOptions.shouldRoundTopCorners = false
+        
         // refresher state
         if overlayScrollView.isDragging {
             refresherState = .needStopRefresher

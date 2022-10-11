@@ -1,24 +1,24 @@
 import UIKit
 
-public class MenuOptionsCollectionViewModel: CellViewModel {
-
-    public init(viewModel: CollectionViewModel, backgroundColor: UIColor = Color.Base.mainBackground) {
-        let configureView = { (view: MenuOptionsCollectionView) in
-            view.collectionView.reload(with: viewModel)
-            view.backgroundColor = backgroundColor
-        }
-        
-        super.init(view: MenuOptionsCollectionView.self, configureView: configureView)
-    }
-
-}
-
 public class MenuOptionsCollectionView: CellView {
     
     public var collectionHeightConstraint: NSLayoutConstraint?
     public let blur = UIVisualEffectView(effect: UIBlurEffect(style: .defaultHSEUI))
     
     public let separator: SeparatorView = .init()
+    
+    public var shouldRoundTopCorners: Bool = false {
+        didSet {
+            if shouldRoundTopCorners {
+                layer.cornerRadius = 12
+                layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+            }
+            else {
+                layer.cornerRadius = 0
+                layer.maskedCorners = []
+            }
+        }
+    }
     
     public let collectionView: CollectionView = {
         let collectionView = CollectionView(type: .grid) { _ -> (UICollectionViewFlowLayout) in
@@ -30,10 +30,14 @@ public class MenuOptionsCollectionView: CellView {
             layout.scrollDirection = .horizontal
             return layout
         }
+        
         return collectionView
     }()
 
     public override func commonInit() {
+        clipsToBounds = true
+        backgroundColor = Color.Base.mainBackground
+        
         addSubview(blur)
         blur.stickToSuperviewEdges(.all)
         

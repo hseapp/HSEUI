@@ -61,7 +61,7 @@ open class SectionViewModel {
             firstCell?.features.insert(.roundTopCorners)
         }
         
-        if features.contains(.roundTopCorners) {
+        if features.contains(.roundBottomCorners) {
             let lastCell = cells.last(where: { !($0 is FooterViewModel) })
             lastCell?.features.insert(.roundBottomCorners)
         }
