@@ -105,6 +105,7 @@ open class CellView: UIView {
         
         if let cell = superview?.superview as? UITableViewCell {
             cell.addInteraction(UIContextMenuInteraction(delegate: delegate))
+            cell.backgroundColor = self.backgroundColor
         }
         else {
             self.addInteraction(UIContextMenuInteraction(delegate: delegate))
