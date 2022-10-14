@@ -45,21 +45,18 @@ open class CellView: UIView {
         }
     }
     
-    public var useChevron: Bool = false
+    public var useChevron: Bool = false {
+        didSet {
+            updateCellBackgroundColor()
+        }
+    }
 
     open override var backgroundColor: UIColor? {
         set {
-            if useChevron, let cell = self.superview?.superview as? UITableViewCell {
-                super.backgroundColor = .clear
-                cell.backgroundColor = newValue
-            } else {
-                super.backgroundColor = newValue
-            }
+            super.backgroundColor = newValue
+            updateCellBackgroundColor()
         }
         get {
-            if useChevron, let cell = self.superview?.superview as? UITableViewCell {
-                return cell.backgroundColor
-            }
             return super.backgroundColor
         }
     }
@@ -105,11 +102,11 @@ open class CellView: UIView {
         
         if let cell = superview?.superview as? UITableViewCell {
             cell.addInteraction(UIContextMenuInteraction(delegate: delegate))
-            cell.backgroundColor = self.backgroundColor
         }
         else {
             self.addInteraction(UIContextMenuInteraction(delegate: delegate))
         }
+        updateCellBackgroundColor()
     }
 
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -203,6 +200,12 @@ open class CellView: UIView {
                 self.backgroundColor = backgroundColor
                 completion?()
             }
+        }
+    }
+    
+    private func updateCellBackgroundColor() {
+        if useChevron, let cell = superview?.superview as? UITableViewCell {
+            cell.backgroundColor = self.backgroundColor
         }
     }
 
