@@ -7,16 +7,11 @@ public class MenuOptionsCollectionView: CellView {
     
     public let separator: SeparatorView = .init()
     
-    public var shouldRoundTopCorners: Bool = false {
+    public var cornerRadiusTopNormalisedValue: CGFloat = 0 {
         didSet {
-            if shouldRoundTopCorners {
-                layer.cornerRadius = 12
-                layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-            }
-            else {
-                layer.cornerRadius = 0
-                layer.maskedCorners = []
-            }
+            let cropped = min(1, max(0, cornerRadiusTopNormalisedValue))
+            layer.cornerRadius = 12 * cropped
+            layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         }
     }
     

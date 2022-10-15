@@ -242,8 +242,6 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
                         header: CollectionViewModelProtocol?,
                         selectorTitles: [String],
                         animated: Bool) {
-        
-        menuOptions.shouldRoundTopCorners = header != nil
         // header view
         headerView.reload(with: header, animated: animated)
         
@@ -264,8 +262,6 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     }
     
     public func reload(with viewModel: CollectionViewModelProtocol?, animated: Bool) {
-        menuOptions.shouldRoundTopCorners = false
-        
         // refresher state
         if overlayScrollView.isDragging {
             refresherState = .needStopRefresher
@@ -327,6 +323,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
             alpha = dy / safeAreaInsets.top
         }
+        menuOptions.cornerRadiusTopNormalisedValue = 1 - alpha
         
         if headerViewHeight?.constant == 0 {
             menuOptions.updateBlur(alpha: showBlur ? 1 : 0)
@@ -342,6 +339,7 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
     
     private func updateOverlayOffset() {
         // when system updated current scroll view we recalculate content offset for overlay
+        
         guard let scroll = scrolls[currentIndex], scroll.contentOffset.y > 0 else { return }
         overlayScrollView.contentOffset.y = scroll.contentOffset.y + bottomView.frame.minY
     }
