@@ -323,14 +323,15 @@ public class ListsCollectionView: UIView, CollectionViewProtocol {
             let dy = overlayScrollView.contentOffset.y - (bottomView.frame.minY - safeAreaInsets.top)
             alpha = dy / safeAreaInsets.top
         }
-        menuOptions.cornerRadiusTopNormalisedValue = 1 - alpha
         
         if headerViewHeight?.constant == 0 {
+            menuOptions.cornerRadiusTopNormalisedValue = showBlur ? 1 - alpha : 0
             menuOptions.updateBlur(alpha: showBlur ? 1 : 0)
             menuOptions.transform = .identity.translatedBy(x: 0, y: -max(0, -overlayScrollView.contentOffset.y))
             self.refresher?.verticalOffset = menuOptionsHeight
         }
         else {
+            menuOptions.cornerRadiusTopNormalisedValue = 1 - alpha
             menuOptions.transform = .identity
             menuOptions.updateBlur(alpha: alpha)
             self.refresher?.verticalOffset = 0
