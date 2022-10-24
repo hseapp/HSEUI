@@ -153,7 +153,7 @@ final class BaseTableView: UITableView, BaseCollectionViewProtocol {
     
     private func updateScrollEnabled() {
         let delta = round(self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom - bounds.height)
-        let newValue = round(delta) != 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
+        let newValue = round(delta) > 0 || self.contentOffset.y > self.adjustedContentInset.top || refresher != nil
         disableLayout = true
         if newValue != isScrollEnabled { self.isScrollEnabled = newValue }
     }
