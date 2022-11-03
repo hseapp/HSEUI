@@ -40,7 +40,7 @@ final class BaseTableViewCell<T>: UITableViewCell where T: UIView {
         let bottomConstraint = view.bottom()
         bottomConstraint.priority = UILayoutPriority(999)
         
-        accessibilityElements = [view]
+        accessibilityElements = view.accessibilityElements
     }
 
 }
