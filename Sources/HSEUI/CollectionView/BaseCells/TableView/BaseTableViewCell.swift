@@ -39,8 +39,6 @@ final class BaseTableViewCell<T>: UITableViewCell where T: UIView {
         
         let bottomConstraint = view.bottom()
         bottomConstraint.priority = UILayoutPriority(999)
-        
-        accessibilityElements = view.accessibilityElements
     }
 
 }
@@ -54,6 +52,14 @@ extension BaseTableViewCell: BaseCellProtocol {
             configurator.configureView?(view as! C.T)
             self.useChevron = configurator.useChevron ?? (configurator.tapCallback != nil)
             (view as? CellView)?.configureTap(callback: configurator.tapCallback)
+            
+            // Don't read empty cells in voiceOver
+            if !view.subviews.contains(where: {$0 is CollectionView}) {
+                accessibilityElementsHidden = (view.accessibilityLabel ?? "").isEmpty
+            } else {
+                // Make all items in the collection (even offscreen) accessible
+                accessibilityElements = [view]
+            }
         }
     }
     
