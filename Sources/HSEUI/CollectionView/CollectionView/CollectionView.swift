@@ -503,10 +503,10 @@ extension CollectionView {
         if let tag = rhs.getCellView()?.tag, tag != 0 { return false }
         
         if let view = lhs.getCellView() {
-            if rhs.updateView(view: view) == false { return false }
+            if rhs.checkView(view: view) == false { return false }
         }
         else if let view = rhs.getCellView() {
-            if lhs.updateView(view: view) == false { return false }
+            if lhs.checkView(view: view) == false { return false }
         }
         
         return true

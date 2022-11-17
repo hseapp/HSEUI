@@ -57,6 +57,7 @@ open class CellViewModel {
     private var registerIfNeeded: ((UIView, UITableView.ElementKind) -> ())?
     
     private var viewCheckAndUpdate: (UIView?) -> Bool = { _ in false }
+    private var viewCheck: (UIView?) -> Bool = { _ in false }
     private var applyConfigurator: Action?
     
     // This property is used to store link on CustomCollectionCell because baseCell is weak
@@ -145,6 +146,10 @@ open class CellViewModel {
         return viewCheckAndUpdate(view)
     }
     
+    public func checkView(view: UIView?) -> Bool {
+        return viewCheck(view)
+    }
+    
     public func update(cell: BaseCellProtocol, collectionView: CollectionView) {
         baseCell = cell
         applyConfigurator?()
@@ -230,6 +235,11 @@ open class CellViewModel {
             self?.customCollectionCell = CustomCollectionCell(view: view)
             self?.baseCell = self?.customCollectionCell
             self?.applyConfigurator?()
+            return true
+        }
+        
+        viewCheck = { view in
+            guard view?.classForCoder == T.self else { return false }
             return true
         }
         
