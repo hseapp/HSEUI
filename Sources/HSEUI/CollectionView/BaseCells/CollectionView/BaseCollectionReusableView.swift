@@ -36,8 +36,6 @@ final class BaseCollectionReusableView<T>: UICollectionReusableView where T: UIV
         bottomConstraint.priority = UILayoutPriority(999)
         let trailingConstraint = view.trailing()
         trailingConstraint.priority = UILayoutPriority(999)
-        
-        accessibilityElements = [view]
     }
     
 }

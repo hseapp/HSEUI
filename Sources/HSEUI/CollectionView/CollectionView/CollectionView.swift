@@ -116,6 +116,7 @@ public class CollectionView: UIView, CollectionViewProtocol {
     public private(set) var collectionViewModel: CollectionViewModelProtocol? {
         didSet {
             currentSections = collectionViewModel?.sections.map { $0.copy() } ?? []
+            accessibilityElements = [contentView]
         }
     }
     

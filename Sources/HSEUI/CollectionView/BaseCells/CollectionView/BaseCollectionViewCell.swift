@@ -38,8 +38,6 @@ final class BaseCollectionViewCell<T>: UICollectionViewCell where T: UIView {
         bottomConstraint.priority = UILayoutPriority(999)
         let trailingConstraint = view.trailing()
         trailingConstraint.priority = UILayoutPriority(999)
-        
-        accessibilityElements = [view]
     }
     
 }

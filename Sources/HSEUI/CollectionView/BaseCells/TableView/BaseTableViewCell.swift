@@ -56,10 +56,7 @@ extension BaseTableViewCell: BaseCellProtocol {
             // Don't read empty cells in voiceOver
             if !view.subviews.contains(where: {$0 is CollectionView}) {
                 accessibilityElementsHidden = (view.accessibilityLabel ?? "").isEmpty
-            } else {
-                // Make all items in the collection (even offscreen) accessible
-                accessibilityElements = [view]
-            }
+            } 
         }
     }
     

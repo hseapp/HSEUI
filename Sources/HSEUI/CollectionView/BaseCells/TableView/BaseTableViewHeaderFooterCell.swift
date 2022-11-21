@@ -34,8 +34,6 @@ final class BaseTableViewHeaderFooterCell<T>: UITableViewHeaderFooterView where 
         
         let bottomConstraint = view.bottom()
         bottomConstraint.priority = UILayoutPriority(999)
-        
-        accessibilityElements = [view]
     }
     
 }
